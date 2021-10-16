@@ -13,9 +13,6 @@ public class Main {
             var ds = new EmbeddedDataSource();
             ds.setDatabaseName(dbUrl);
             var conn = ds.getConnection();
-            String sql = "Create Table calendar (id int not null generated always as identity," + "hours int, text varchar(128))";
-            Statement statement = conn.createStatement();
-            statement.executeUpdate(sql);
             System.out.println(conn.getClientInfo());
         } catch (SQLException e) {
             e.printStackTrace();
