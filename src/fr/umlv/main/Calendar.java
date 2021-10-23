@@ -1,14 +1,32 @@
 package fr.umlv.main;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 public class Calendar {
     @Id
-    private Long id;
+    @GeneratedValue
+    private Integer id;
 
-    @Column
-    private String name;
+    private String date;
+    private String heure;
+    private String info;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getHeure() {
+        return heure;
+    }
+
+    public String getInfo() {
+        return info;
+    }
 }
