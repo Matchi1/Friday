@@ -5,13 +5,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
+@Table(name = "Calendar")
 public class Calendar {
     @Id
     @GeneratedValue
     private Integer id;
 
+    @Column
     private String date;
+
+    @Column
     private String heure;
+
+    @Column
     private String info;
 
     public Integer getId() {

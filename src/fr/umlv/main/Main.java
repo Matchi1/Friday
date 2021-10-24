@@ -8,16 +8,11 @@ import java.sql.Statement;
 
 public class Main {
     public static void main(String[] args) throws SQLException, NamingException {
-        try {
-            var dbUrl = "db;create=true";
-            var ds = new EmbeddedDataSource();
-            ds.setDatabaseName(dbUrl);
-            var conn = ds.getConnection();
-            System.out.println(conn.getClientInfo());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
+        var dbUrl = "db/calendar";
+        var ds = new EmbeddedDataSource();
+        ds.setDatabaseName(dbUrl);
+        ds.setCreateDatabase("create");
+        var conn = ds.getConnection();
+        System.out.println(conn.getClientInfo());
     }
 }
