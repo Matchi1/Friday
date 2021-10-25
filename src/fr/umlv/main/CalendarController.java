@@ -1,24 +1,23 @@
 package fr.umlv.main;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Controller
 public class CalendarController {
+    @Autowired
+    private CalendarService calendarService;
 
-    private UserRep userRepo;
+    private final BdRepo bdRepo;
 
-    //Recup un produit par un Id
-    @GetMapping(value = "/test/{id}")
-    public Calendar printCalendar(@PathVariable int id) {
-        return userRepo.findById(id);
+    public CalendarController(BdRepo bdRepo) {
+        this.bdRepo = bdRepo;
     }
 
-    @DeleteMapping (value = "/test/{id}")
-    public void deleteCalendar(@PathVariable int id) {
-        userRepo.delete(id);
+    @GetMapping("/calendar")
+    public List<Calendar> getId() {
+        return bdRepo.findAll();
     }
-
 }
