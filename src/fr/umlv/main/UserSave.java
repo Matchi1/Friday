@@ -1,5 +1,5 @@
 package fr.umlv.main;
 
-//DTO : Object json needed for the frontend
+//Object json needed for the frontend , pas de methode ici
 public record UserSave(String username, String password) {
 }
