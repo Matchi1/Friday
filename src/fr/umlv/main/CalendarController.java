@@ -17,7 +17,7 @@ public class CalendarController {
     }
 
     @GetMapping("/calendar")
-    public List<Calendar> getId() {
+    public List<CalendarEntity> getId() {
         return bdRepo.findAll();
     }
 }

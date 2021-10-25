@@ -6,11 +6,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Calendar;
 import java.util.UUID;
 
-public record UserResponseDTO(UUID id, String username) {
+public record UserResponse(UUID id, String username) {
+    private final Calendar entity;
+
     @PostMapping("/user")
-    HttpResponse<UserResponseDTO> saveUser(@ResponseBody @Validated UserSaveDTO input) {
+    HttpResponse<UserResponse> saveUser(@ResponseBody @Validated UserSave input) {
+        var newUser = entity.saveUser()
         return HttpResponse.
 
     }

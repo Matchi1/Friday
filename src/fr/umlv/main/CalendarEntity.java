@@ -5,7 +5,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "Calendar")
-public class Calendar {
+public class CalendarEntity {
     @Id
     @GeneratedValue
     private UUID id;
@@ -13,12 +13,12 @@ public class Calendar {
     private String pwd;
 
     @ManyToOne
-    private Calendar date;
+    private CalendarEntity date;
 
     @ManyToOne
-    private Calendar heure;
+    private CalendarEntity heure;
 
     @ManyToOne
-    private Calendar info;
+    private CalendarEntity info;
 
 }
