@@ -1,7 +1,5 @@
 package fr.umlv.main;
 
-import org.apache.catalina.User;
-import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
