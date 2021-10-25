@@ -10,10 +10,15 @@ public class Calendar {
     @GeneratedValue
     private UUID id;
 
-    private String date;
+    private String pwd;
 
-    private String heure;
+    @ManyToOne
+    private Calendar date;
 
-    private String info;
+    @ManyToOne
+    private Calendar heure;
+
+    @ManyToOne
+    private Calendar info;
 
 }
