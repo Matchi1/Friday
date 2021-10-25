@@ -1,36 +1,19 @@
 package fr.umlv.main;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "Calendar")
 public class Calendar {
     @Id
     @GeneratedValue
-    private Integer id;
+    private UUID id;
 
-    @Column
     private String date;
 
-    @Column
     private String heure;
 
-    @Column
     private String info;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getHeure() {
-        return heure;
-    }
-
-    public String getInfo() {
-        return info;
-    }
 }
