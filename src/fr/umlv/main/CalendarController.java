@@ -15,17 +15,13 @@ import java.util.Objects;
 public class CalendarController {
     @Autowired
     private CalendarService calendarService;
-    
-    private final UserRepo userRepo;
-
-    public CalendarController(UserRepo userRepo) {
-        this.userRepo = userRepo;
-    }
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/calendar")
     public ResponseEntity<UserResponse> saveUser(@Validated UserSave input) {
         Objects.requireNonNull(input);
-        var newUser = userRepo.saveUser(input.username(), input.password());
+        var newUser = userService.addUser(input.username(), input.password());
         return new ResponseEntity<>(new UserResponse(newUser.getBody().id(), newUser.getBody().username()), HttpStatus.OK);
         //return ResponseEntity.created(new UserResponse(newUser.getBody().id(), newUser.getBody().username()));
 
@@ -33,6 +29,6 @@ public class CalendarController {
 
     @GetMapping("/calendar")
     public List<Event> getId() {
-        return userRepo.findAll();
+        return calendarService.getEvents();
     }
 }
