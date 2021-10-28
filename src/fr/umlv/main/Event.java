@@ -4,38 +4,32 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Calendar")
+@Table(name = "event")
 public class Event {
-    @Column(nullable = false)
     @Id
     @GeneratedValue
+    @Column(nullable = false)
     private UUID id;
 
-    private String pwd;
+    @Column(name = "date")
+    private String date;
 
-    @ManyToOne
-    private Event date;
+    @Column(name = "heure")
+    private String heure;
 
-    @ManyToOne
-    private Event heure;
+    @Column(name = "info")
+    private String info;
 
-    @ManyToOne
-    private Event info;
-
-    public Event getInfo() {
+    public String getInfo() {
         return info;
     }
 
-    public Event getHeure() {
+    public String getHeure() {
         return heure;
     }
 
-    public Event getDate() {
+    public String getDate() {
         return date;
-    }
-
-    public String getPwd() {
-        return pwd;
     }
 
     public UUID getId() {
