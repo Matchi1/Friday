@@ -7,5 +7,4 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, UUID> {
-    ResponseEntity<UserResponse> saveUser(String username, String password);
 }

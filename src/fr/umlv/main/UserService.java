@@ -15,10 +15,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public ResponseEntity<UserResponse> addUser(String username, String password) {
-        return userRepository.saveUser(username, password);
-    }
-
     public void removeUser(User user) {
         userRepository.delete(user);
     }
