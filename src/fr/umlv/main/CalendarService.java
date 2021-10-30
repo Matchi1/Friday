@@ -19,7 +19,7 @@ public class CalendarService {
         eventRepository.save(event);
     }
 
-    public void removeEvent(UUID uid) {
+    public void removeEvent(int uid) {
         eventRepository.deleteById(uid);
     }
 

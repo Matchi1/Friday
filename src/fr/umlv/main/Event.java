@@ -5,24 +5,20 @@ import com.google.common.eventbus.EventBus;
 import javax.persistence.*;
 import java.util.UUID;
 
-@Entity
-@Table(name = "event")
+@Entity(name = "EVENT_DB")
 public class Event {
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    private UUID id;
+    private int id;
 
     @ManyToOne
-    @Column(name = "date")
     private Event date;
 
     @ManyToOne
-    @Column(name = "heure")
     private Event heure;
 
     @ManyToOne
-    @Column(name = "info")
     private Event info;
 
     public Event getInfo() {
@@ -37,7 +33,7 @@ public class Event {
         return date;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 

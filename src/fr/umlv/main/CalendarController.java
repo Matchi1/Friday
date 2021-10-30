@@ -17,7 +17,7 @@ import java.util.Objects;
 @RestController
 public class CalendarController {
     @Autowired
-    private CalendarService calendarService;
+    private EventRepo eventRepo;
     @Autowired
     private UserService userService;
 
@@ -26,23 +26,16 @@ public class CalendarController {
     public ResponseEntity<UserResponse> saveUser(@Validated UserSave input) {
         var newUser = userRepo.saveUser(input.username(), input.password());
         return new ResponseEntity<>(new UserResponse(newUser.getBody().id(), newUser.getBody().username()), HttpStatus.CREATED);
+    }
+    */
 
+    @GetMapping("/getAll")
+    public List<Event> getEvent() {
+        return eventRepo.findAll();
     }
 
-    @PutMapping("/put")
-    public ResponseEntity<UserResponse> updatePassword(@Validated UserSave input) {
-        var newPwd = userRepo.updatePassword(input.password());
-        return new ResponseEntity<UserSave>()
-    }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<UserResponse> deleteUser(@Validated UserSave input) {
-
-    }
-     */
-
-    @PostMapping("user")
-    public void addUser (Event user) {
-        return user.
+    @PostMapping("/putOne")
+    public String addEvent(@RequestBody Event event) {
+        return "event registered";
     }
 }

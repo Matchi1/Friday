@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "USER_DB")
 public class User {
     @Id
     @GeneratedValue
