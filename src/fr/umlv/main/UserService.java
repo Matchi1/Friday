@@ -11,15 +11,15 @@ public class UserService {
     @Autowired
     private UserRepo userRepository;
 
-    public void addUser(User user) {
+    public void addUser(Event user) {
         userRepository.save(user);
     }
 
-    public void removeUser(User user) {
+    public void removeUser(Event user) {
         userRepository.delete(user);
     }
 
-    public List<User> getAllUsers() {
+    public List<Event> getAllUsers() {
         return userRepository.findAll();
     }
 }

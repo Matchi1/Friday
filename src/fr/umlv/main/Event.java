@@ -1,5 +1,7 @@
 package fr.umlv.main;
 
+import com.google.common.eventbus.EventBus;
+
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -11,24 +13,27 @@ public class Event {
     @Column(nullable = false)
     private UUID id;
 
+    @ManyToOne
     @Column(name = "date")
-    private String date;
+    private Event date;
 
+    @ManyToOne
     @Column(name = "heure")
-    private String heure;
+    private Event heure;
 
+    @ManyToOne
     @Column(name = "info")
-    private String info;
+    private Event info;
 
-    public String getInfo() {
+    public Event getInfo() {
         return info;
     }
 
-    public String getHeure() {
+    public Event getHeure() {
         return heure;
     }
 
-    public String getDate() {
+    public Event getDate() {
         return date;
     }
 
