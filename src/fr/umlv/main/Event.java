@@ -13,25 +13,13 @@ public class Event {
     private int id;
 
     @ManyToOne
-    private Event date;
+    private User date;
 
     @ManyToOne
-    private Event heure;
+    private User heure;
 
     @ManyToOne
-    private Event info;
-
-    public Event getInfo() {
-        return info;
-    }
-
-    public Event getHeure() {
-        return heure;
-    }
-
-    public Event getDate() {
-        return date;
-    }
+    private User info;
 
     public int getId() {
         return id;

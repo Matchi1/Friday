@@ -12,13 +12,6 @@ import java.sql.SQLException;
 
 @SpringBootApplication
 public class SpringBootTest {
-    public static String getQueries() throws IOException {
-        var queries = new StringBuilder();
-        var path = Path.of("create.sql");
-        Files.lines(path).forEach(queries::append);
-        return queries.toString();
-    }
-
     public static void main(String[] args) throws SQLException, IOException {
         SpringApplication.run(SpringBootTest.class, args);
     }
