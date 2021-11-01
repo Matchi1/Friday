@@ -25,5 +25,13 @@ public class Event {
         return id;
     }
 
-
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", date=" + date +
+                ", heure=" + heure +
+                ", info=" + info +
+                '}';
+    }
 }

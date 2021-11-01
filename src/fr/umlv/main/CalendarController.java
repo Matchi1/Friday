@@ -29,6 +29,11 @@ public class CalendarController {
     }
     */
 
+    @RequestMapping("/hello")
+    public String sayHello() {
+        return "Hello";
+    }
+
     @GetMapping("/getAll")
     public List<Event> getEvent() {
         return eventRepo.findAll();
@@ -36,6 +41,7 @@ public class CalendarController {
 
     @PostMapping("/putOne")
     public String addEvent(@RequestBody Event event) {
-        return "event registered";
+        System.out.println(event.toString());
+        return "ok";
     }
 }
