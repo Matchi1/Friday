@@ -12,17 +12,29 @@ public class Event {
     @Column(nullable = false)
     private int id;
 
-    @ManyToOne
-    private User date;
+    private String date;
+
+    private String heure;
+
+    private String info;
 
     @ManyToOne
-    private User heure;
-
-    @ManyToOne
-    private User info;
+    private User user;
 
     public int getId() {
         return id;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getHeure() {
+        return heure;
+    }
+
+    public String getInfo() {
+        return info;
     }
 
     @Override

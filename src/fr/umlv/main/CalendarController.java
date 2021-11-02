@@ -17,15 +17,15 @@ import java.util.Objects;
 @RestController
 public class CalendarController {
     @Autowired
-    private EventRepo eventRepo;
+    private CalendarService calendarService;
     @Autowired
     private UserService userService;
 
-    /* Trouver le moyen avec le URI ou sinn test celui la
+    /*
     @PostMapping("/calendar")
     public ResponseEntity<UserResponse> saveUser(@Validated UserSave input) {
-        var newUser = userRepo.saveUser(input.username(), input.password());
-        return new ResponseEntity<>(new UserResponse(newUser.getBody().id(), newUser.getBody().username()), HttpStatus.CREATED);
+        var newUser = userService.addUser(input.username(), input.password());
+        return new ResponseEntity<>(new UserResponse(newUser.getBody().id(), newUser.getBody().username()), HttpStatus.OK);
     }
     */
 
@@ -36,12 +36,13 @@ public class CalendarController {
 
     @GetMapping("/getAll")
     public List<Event> getEvent() {
-        return eventRepo.findAll();
+        return calendarService.getEvents();
     }
 
     @PostMapping("/putOne")
     public String addEvent(@RequestBody Event event) {
         System.out.println(event.toString());
+        calendarService.addEvent(event);
         return "ok";
     }
 }
