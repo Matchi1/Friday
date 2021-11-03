@@ -1,6 +1,5 @@
 package fr.umlv.main;
 
-import org.apache.catalina.User;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import java.net.URI;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @RestController
 public class CalendarController {
@@ -44,5 +44,24 @@ public class CalendarController {
         System.out.println(event.toString());
         calendarService.addEvent(event);
         return "ok";
+    }
+
+    @GetMapping("/users")
+    public List<User> getUsers() {
+        return userService.getAllUsers();
+    }
+
+    @PostMapping("/users/putOne")
+    public ResponseEntity<User> putUser(@RequestBody User user) {
+        Objects.requireNonNull(user);
+        userService.addUser(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/removeOne/{user}")
+    public ResponseEntity<User> removeUser(@PathVariable User user) {
+        Objects.requireNonNull(user);
+        userService.removeUser(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
