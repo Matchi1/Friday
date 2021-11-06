@@ -1,6 +1,7 @@
 package fr.umlv.main;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -23,17 +24,14 @@ public class UserService {
                 .body(new UserResponse(createdUser.getId(), createdUser.getUsername()));
     }
 
-    public void removeUser(User user) {
-        userRepository.delete(user);
+    public ResponseEntity<?> removeUser(UUID id, String pswd) {
+        var user = userRepository.findById(id);
+        if (user.isEmpty()) return ResponseEntity.notFound().build();
+        userRepository.delete(user.get());
+        return ResponseEntity.ok().build();
     }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
-    }
-
-    public ResponseEntity<UserResponse> getUserById(UUID id) {
-        var user = userRepository.findById(id);
-        var response = new UserResponse(id, user.get().getUsername());
-        return ResponseEntity.ok(response);
     }
 }
