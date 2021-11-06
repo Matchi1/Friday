@@ -40,10 +40,10 @@ public class CalendarController {
     }
 
     @PostMapping("/putOne")
-    public String addEvent(@RequestBody Event event) {
+    public ResponseEntity<Event> addEvent(@RequestBody Event event) {
         System.out.println(event.toString());
         calendarService.addEvent(event);
-        return "ok";
+        return new ResponseEntity<>(event, HttpStatus.CREATED);
     }
 
     @GetMapping("/users")
@@ -51,11 +51,10 @@ public class CalendarController {
         return userService.getAllUsers();
     }
 
-    @PostMapping("/users/putOne")
-    public ResponseEntity<User> putUser(@RequestBody User user) {
+    @PostMapping("/users/save")
+    public ResponseEntity<UserResponse> putUser(@RequestBody UserSave user) {
         Objects.requireNonNull(user);
-        userService.addUser(user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return userService.addUser(user.username(), user.password());
     }
 
     @GetMapping("/users/removeOne/{user}")
