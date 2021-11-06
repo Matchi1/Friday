@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -28,5 +29,11 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public ResponseEntity<UserResponse> getUserById(UUID id) {
+        var user = userRepository.findById(id);
+        var response = new UserResponse(id, user.get().getUsername());
+        return ResponseEntity.ok(response);
     }
 }

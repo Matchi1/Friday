@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 @SpringBootApplication()
-public class SpringBootTest {
+public class  SpringBootTest {
     public static void main(String[] args) throws SQLException, IOException {
         SpringApplication.run(SpringBootTest.class, args);
     }

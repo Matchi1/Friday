@@ -57,6 +57,12 @@ public class CalendarController {
         return userService.addUser(user.username(), user.password());
     }
 
+    @GetMapping("/users/save/{id}")
+    public ResponseEntity<UserResponse> getUser(@PathVariable UUID id) {
+        Objects.requireNonNull(id);
+        return userService.getUserById(id);
+    }
+
     @GetMapping("/users/removeOne/{user}")
     public ResponseEntity<User> removeUser(@PathVariable User user) {
         Objects.requireNonNull(user);
