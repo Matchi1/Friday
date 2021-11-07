@@ -1,5 +1,8 @@
-package fr.umlv.main;
+package fr.umlv.main.event;
 
+import fr.umlv.main.event.Event;
+import fr.umlv.main.event.EventRepo;
+import fr.umlv.main.event.EventResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

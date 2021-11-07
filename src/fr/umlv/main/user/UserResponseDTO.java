@@ -1,4 +1,4 @@
-package fr.umlv.main;
+package fr.umlv.main.user;
 
 import java.util.UUID;
 

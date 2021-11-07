@@ -1,6 +1,6 @@
-package fr.umlv.main;
+package fr.umlv.main.event;
 
-import com.google.common.eventbus.EventBus;
+import fr.umlv.main.user.User;
 
 import javax.persistence.*;
 import java.util.UUID;

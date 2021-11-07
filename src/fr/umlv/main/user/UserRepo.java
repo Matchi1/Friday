@@ -1,9 +1,9 @@
-package fr.umlv.main;
+package fr.umlv.main.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface EventRepo extends JpaRepository<Event, Integer> {
+public interface UserRepo extends JpaRepository<User, UUID> {
 }

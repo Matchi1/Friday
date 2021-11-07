@@ -1,7 +1,14 @@
 package fr.umlv.main;
 
+import fr.umlv.main.event.Event;
+import fr.umlv.main.event.EventResponseDTO;
+import fr.umlv.main.event.EventSaveDTO;
+import fr.umlv.main.event.EventService;
+import fr.umlv.main.user.UserCredentialDTO;
+import fr.umlv.main.user.UserResponseDTO;
+import fr.umlv.main.user.UserSaveDTO;
+import fr.umlv.main.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
