@@ -1,9 +1,6 @@
 package fr.umlv.main;
 
-import fr.umlv.main.event.Event;
-import fr.umlv.main.event.EventResponseDTO;
-import fr.umlv.main.event.EventSaveDTO;
-import fr.umlv.main.event.EventService;
+import fr.umlv.main.event.*;
 import fr.umlv.main.user.UserCredentialDTO;
 import fr.umlv.main.user.UserResponseDTO;
 import fr.umlv.main.user.UserSaveDTO;
@@ -23,13 +20,6 @@ public class CalendarController {
     private UserService userService;
 
     /*
-    @PostMapping("/calendar")
-    public ResponseEntity<UserResponse> saveUser(@Validated UserSave input) {
-        var newUser = userService.addUser(input.username(), input.password());
-        return new ResponseEntity<>(new UserResponse(newUser.getBody().id(), newUser.getBody().username()), HttpStatus.OK);
-    }
-    */
-
     @RequestMapping("/hello")
     public String sayHello() {
         return "Hello";
@@ -39,12 +29,20 @@ public class CalendarController {
     public List<Event> getEvent() {
         return eventService.getEvents();
     }
-
+    */
     @PostMapping("/event/save")
     public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) {
         Objects.requireNonNull(event);
         return eventService.addEvent(event.date(), event.heure(), event.info());
     }
+
+    @DeleteMapping("/event/delete")
+    public ResponseEntity<?> removeEvent(@RequestBody EventCredentialDTO event) {
+        Objects.requireNonNull(event);
+        return eventService.removeEvent(event.id(), event.userId());
+    }
+
+
     /*
     @GetMapping("/users")
     public List<User> getUsers() {
