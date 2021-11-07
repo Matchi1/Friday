@@ -1,23 +1,17 @@
 package fr.umlv.main;
 
-import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @RestController
 public class CalendarController {
     @Autowired
-    private CalendarService calendarService;
+    private EventService eventService;
     @Autowired
     private UserService userService;
 
@@ -36,29 +30,29 @@ public class CalendarController {
 
     @GetMapping("/getAll")
     public List<Event> getEvent() {
-        return calendarService.getEvents();
+        return eventService.getEvents();
     }
 
-    @PostMapping("/putOne")
-    public ResponseEntity<Event> addEvent(@RequestBody Event event) {
-        System.out.println(event.toString());
-        calendarService.addEvent(event);
-        return new ResponseEntity<>(event, HttpStatus.CREATED);
+    @PostMapping("/event/save")
+    public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) {
+        Objects.requireNonNull(event);
+        return eventService.addEvent(event.date(), event.heure(), event.info());
     }
-
+    /*
     @GetMapping("/users")
     public List<User> getUsers() {
         return userService.getAllUsers();
     }
+     */
 
     @PostMapping("/users/save")
-    public ResponseEntity<UserResponse> putUser(@RequestBody UserSave user) {
+    public ResponseEntity<UserResponseDTO> putUser(@RequestBody UserSaveDTO user) {
         Objects.requireNonNull(user);
         return userService.addUser(user.username(), user.password());
     }
 
     @DeleteMapping("/users/delete")
-    public ResponseEntity<?> removeUser(@RequestBody UserCred user) {
+    public ResponseEntity<?> removeUser(@RequestBody UserCredentialDTO user) {
         Objects.requireNonNull(user);
         return userService.removeUser(user.id(), user.password());
     }
