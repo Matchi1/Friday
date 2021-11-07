@@ -10,7 +10,7 @@ public class Event {
     @Id
     @GeneratedValue
     @Column(nullable = false)
-    private int id;
+    private UUID id;
 
     private String date;
 
@@ -21,7 +21,17 @@ public class Event {
     @ManyToOne
     private User user;
 
-    public int getId() {
+    public Event(String date, String heure, String info) {
+        this.date = date;
+        this.heure = heure;
+        this.info = info;
+    }
+
+    public Event() {
+
+    }
+
+    public UUID getId() {
         return id;
     }
 
