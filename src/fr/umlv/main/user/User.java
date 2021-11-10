@@ -1,9 +1,9 @@
 package fr.umlv.main.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import fr.umlv.main.event.Event;
+
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,6 +18,9 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private ArrayList<Event> user;
 
     public User(String username, String password) {
         Objects.requireNonNull(username);
