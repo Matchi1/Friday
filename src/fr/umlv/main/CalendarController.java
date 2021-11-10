@@ -25,7 +25,7 @@ public class CalendarController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/event/add")
+    @PostMapping("/event/save")
     public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) {
         Objects.requireNonNull(event);
         return eventService.addEvent(event.date(), event.heure(), event.info());
@@ -54,6 +54,11 @@ public class CalendarController {
         return eventService.getEvents();
     }
 
+    @GetMapping("/events/getAll")
+    public ResponseEntity<List<EventResponseDTO>> getEvents() {
+        return eventService.getEvents();
+    }
+    
     @GetMapping("/events/get/{id}")
     public ResponseEntity<EventResponseDTO> getEvent(@PathVariable UUID id) {
         return eventService.getEventById(id);
