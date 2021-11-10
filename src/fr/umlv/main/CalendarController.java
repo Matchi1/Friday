@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @RestController
 public class CalendarController {
@@ -19,17 +20,6 @@ public class CalendarController {
     @Autowired
     private UserService userService;
 
-    /*
-    @RequestMapping("/hello")
-    public String sayHello() {
-        return "Hello";
-    }
-
-    @GetMapping("/getAll")
-    public List<Event> getEvent() {
-        return eventService.getEvents();
-    }
-    */
     @PostMapping("/event/save")
     public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) {
         Objects.requireNonNull(event);
@@ -42,14 +32,6 @@ public class CalendarController {
         return eventService.removeEvent(event.id(), event.userId());
     }
 
-
-    /*
-    @GetMapping("/users")
-    public List<User> getUsers() {
-        return userService.getAllUsers();
-    }
-     */
-
     @PostMapping("/users/save")
     public ResponseEntity<UserResponseDTO> putUser(@RequestBody UserSaveDTO user) {
         Objects.requireNonNull(user);
@@ -60,5 +42,15 @@ public class CalendarController {
     public ResponseEntity<?> removeUser(@RequestBody UserCredentialDTO user) {
         Objects.requireNonNull(user);
         return userService.removeUser(user.id(), user.password());
+    }
+
+    @GetMapping("/events/getAll")
+    public ResponseEntity<List<EventResponseDTO>> getEvents() {
+        return eventService.getEvents();
+    }
+
+    @GetMapping("/events/get/{id}")
+    public ResponseEntity<EventResponseDTO> getEvent(@PathVariable UUID id) {
+        return eventService.getEventById(id);
     }
 }
