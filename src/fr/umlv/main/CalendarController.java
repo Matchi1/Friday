@@ -58,7 +58,7 @@ public class CalendarController {
     public ResponseEntity<List<EventResponseDTO>> getEvents() {
         return eventService.getEvents();
     }
-    
+
     @GetMapping("/events/get/{id}")
     public ResponseEntity<EventResponseDTO> getEvent(@PathVariable UUID id) {
         return eventService.getEventById(id);
