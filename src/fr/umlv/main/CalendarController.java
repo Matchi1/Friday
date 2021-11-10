@@ -61,4 +61,10 @@ public class CalendarController {
         Objects.requireNonNull(user);
         return userService.removeUser(user.id(), user.password());
     }
+
+    @PutMapping("/users/update")
+    public ResponseEntity<UserResponseDTO> updateUser(@RequestBody UserCredentialDTO user) {
+        Objects.requireNonNull(user);
+        return userService.updateUser(user.id(), user.password());
+    }
 }

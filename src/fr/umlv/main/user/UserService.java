@@ -28,6 +28,17 @@ public class UserService {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity<UserResponseDTO> updateUser(UUID id , String password) {
+        var user = userRepository.findById(id);
+        if (user.isEmpty()) return ResponseEntity.notFound().build();
+        user.get().setPassword(password);
+        userRepository.save(user.get());
+        return ResponseEntity
+                .created(URI.create("/users/update/" + user.get().getId()))
+                .body(new UserResponseDTO(user.get().getId(), user.get().getUsername()));
+    }
+
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
