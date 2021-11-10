@@ -3,6 +3,7 @@ package fr.umlv.main.event;
 import fr.umlv.main.user.User;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity(name = "EVENT_DB")
@@ -12,23 +13,27 @@ public class Event {
     @Column(nullable = false)
     private UUID id;
 
-    private String date;
+    @Column(nullable = false)
+    private final String date;
 
-    private String heure;
+    private final String heure;
 
-    private String info;
+    private final String info;
 
     @ManyToOne
     private User user;
 
     public Event(String date, String heure, String info) {
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(heure);
+        Objects.requireNonNull(info);
         this.date = date;
         this.heure = heure;
         this.info = info;
     }
 
     public Event() {
-        this(null, null, null);
+        throw new IllegalArgumentException("Construction should have argument");
     }
 
     public UUID getId() {

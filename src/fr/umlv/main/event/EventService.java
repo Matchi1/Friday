@@ -2,6 +2,7 @@ package fr.umlv.main.event;
 
 import fr.umlv.main.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class EventService {
 
     public ResponseEntity<?> removeEvent(UUID id, User userId) {
         var event = eventRepository.findById(id);
-        if (event.isEmpty()) return ResponseEntity.notFound().build();
+        if (event.isEmpty()) { return ResponseEntity.notFound().build(); }
         eventRepository.delete(event.get());
         return ResponseEntity.ok().build();
     }
@@ -41,7 +42,7 @@ public class EventService {
             eventResponse.add(new EventResponseDTO(event.getId()));
         }
         return ResponseEntity
-                .created(URI.create("event/all"))
+                .created(URI.create("event/getAll"))
                 .body(eventResponse);
     }
 

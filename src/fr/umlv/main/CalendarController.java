@@ -20,7 +20,7 @@ public class CalendarController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/event/save")
+    @PostMapping("/event/add")
     public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) {
         Objects.requireNonNull(event);
         return eventService.addEvent(event.date(), event.heure(), event.info());
