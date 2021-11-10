@@ -1,16 +1,14 @@
 package fr.umlv.main.event;
 
-import fr.umlv.main.event.Event;
-import fr.umlv.main.event.EventRepo;
-import fr.umlv.main.event.EventResponseDTO;
 import fr.umlv.main.user.User;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -37,7 +35,20 @@ public class EventService {
         return ResponseEntity.ok().build();
     }
 
-    public List<Event> getEvents() {
-        return eventRepository.findAll();
+    public ResponseEntity<List<EventResponseDTO>> getEvents() {
+        var eventResponse = new ArrayList<EventResponseDTO>();
+        for(var event : eventRepository.findAll()) {
+            eventResponse.add(new EventResponseDTO(event.getId()));
+        }
+        return ResponseEntity
+                .created(URI.create("event/all"))
+                .body(eventResponse);
+    }
+
+    public ResponseEntity<EventResponseDTO> getEventById(UUID id) {
+        Objects.requireNonNull(id);
+        return ResponseEntity
+                .created(URI.create("event/get/" + id))
+                .body(new EventResponseDTO(id));
     }
 }

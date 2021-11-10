@@ -28,7 +28,7 @@ public class Event {
     }
 
     public Event() {
-
+        this(null, null, null);
     }
 
     public UUID getId() {
