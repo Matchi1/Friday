@@ -28,13 +28,20 @@ public class CalendarController {
     @PostMapping("/event/add")
     public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) {
         Objects.requireNonNull(event);
-        return eventService.addEvent(event.date(), event.heure(), event.info());
+        return eventService.addEvent(event);
     }
 
     @DeleteMapping("/event/delete")
     public ResponseEntity<?> removeEvent(@RequestBody EventCredentialDTO event) {
         Objects.requireNonNull(event);
         return eventService.removeEvent(event.id(), event.userId());
+    }
+
+    @PutMapping("/event/update/{id}")
+    public ResponseEntity<EventSaveDTO> updateEvent(
+            @PathVariable UUID id,
+            @RequestBody EventSaveDTO event) {
+        return eventService.updateEvent(id, event);
     }
 
     @PostMapping("/users/save")
@@ -55,12 +62,12 @@ public class CalendarController {
     }
 
     @GetMapping("/events/getAll")
-    public ResponseEntity<List<EventResponseDTO>> getEvents() {
+    public ResponseEntity<List<EventSaveDTO>> getEvents() {
         return eventService.getEvents();
     }
 
     @GetMapping("/events/get/{id}")
-    public ResponseEntity<EventResponseDTO> getEvent(@PathVariable UUID id) {
+    public ResponseEntity<EventSaveDTO> getEvent(@PathVariable UUID id) {
         return eventService.getEventById(id);
     }
 }
