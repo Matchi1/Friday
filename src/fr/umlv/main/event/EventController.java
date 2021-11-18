@@ -1,10 +1,8 @@
-package fr.umlv.main;
+package fr.umlv.main.event;
 
-import fr.umlv.main.event.*;
 import fr.umlv.main.user.UserCredentialDTO;
 import fr.umlv.main.user.UserResponseDTO;
 import fr.umlv.main.user.UserSaveDTO;
-import fr.umlv.main.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +17,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 @RestController
-public class CalendarController {
+public class EventController {
     @Autowired
     private EventService eventService;
-    @Autowired
-    private UserService userService;
 
     @PostMapping("/event/add")
     public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) {
@@ -32,42 +28,28 @@ public class CalendarController {
     }
 
     @DeleteMapping("/event/delete")
-    public ResponseEntity<?> removeEvent(@RequestBody EventCredentialDTO event) {
+    public ResponseEntity<EventResponseDTO> removeEvent(@RequestBody EventCredentialDTO event) {
         Objects.requireNonNull(event);
         return eventService.removeEvent(event.id(), event.userId());
     }
 
     @PutMapping("/event/update/{id}")
-    public ResponseEntity<EventSaveDTO> updateEvent(
+    public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable UUID id,
             @RequestBody EventSaveDTO event) {
+        Objects.requireNonNull(event);
+        Objects.requireNonNull(id);
         return eventService.updateEvent(id, event);
     }
 
-    @PostMapping("/users/save")
-    public ResponseEntity<UserResponseDTO> putUser(@RequestBody UserSaveDTO user) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-        Objects.requireNonNull(user);
-        return userService.addUser(user.username(), user.password());
-    }
-
-    @DeleteMapping("/users/delete")
-    public ResponseEntity<?> removeUser(@RequestBody UserCredentialDTO user) {
-        Objects.requireNonNull(user);
-        return userService.removeUser(user.id(), user.password());
-    }
-    
     @GetMapping("/events/getAll")
     public ResponseEntity<List<EventResponseDTO>> getEvents() {
         return eventService.getEvents();
     }
 
-    @GetMapping("/events/getAll")
-    public ResponseEntity<List<EventSaveDTO>> getEvents() {
-        return eventService.getEvents();
-    }
-
     @GetMapping("/events/get/{id}")
-    public ResponseEntity<EventSaveDTO> getEvent(@PathVariable UUID id) {
+    public ResponseEntity<EventResponseDTO> getEvent(@PathVariable UUID id) {
+        Objects.requireNonNull(id);
         return eventService.getEventById(id);
     }
 }
