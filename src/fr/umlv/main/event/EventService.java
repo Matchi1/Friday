@@ -28,34 +28,34 @@ public class EventService {
         return new ResponseEntity<>(new EventResponseDTO(event.getId()), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<EventSaveDTO> updateEvent(UUID id, EventSaveDTO eventSave) {
+    public ResponseEntity<EventResponseDTO> updateEvent(UUID id, EventSaveDTO eventSave) {
         var event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found for this Id :: " + id));
         event.setDate(eventSave.date());
         event.setHeure(eventSave.heure());
         event.setInfo(eventSave.info());
         final var updatedEvent = eventRepository.save(event);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new EventSaveDTO(updatedEvent));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new EventResponseDTO(updatedEvent.getId()));
     }
 
-    public ResponseEntity<EventSaveDTO> removeEvent(UUID id, User userId) {
+    public ResponseEntity<EventResponseDTO> removeEvent(UUID id, User userId) {
         var event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found for this Id :: " + id));
         eventRepository.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(new EventSaveDTO(event));
+        return ResponseEntity.status(HttpStatus.OK).body(new EventResponseDTO(id));
     }
 
-    public ResponseEntity<List<EventSaveDTO>> getEvents() {
-        var eventResponse = new ArrayList<EventSaveDTO>();
+    public ResponseEntity<List<EventResponseDTO>> getEvents() {
+        var eventResponse = new ArrayList<EventResponseDTO>();
         eventRepository.findAll()
-                .forEach(event -> eventResponse.add(new EventSaveDTO(event)));
+                .forEach(event -> eventResponse.add(new EventResponseDTO(event.getId())));
         return ResponseEntity.status(HttpStatus.OK).body(eventResponse);
     }
 
-    public ResponseEntity<EventSaveDTO> getEventById(UUID id) {
+    public ResponseEntity<EventResponseDTO> getEventById(UUID id) {
         Objects.requireNonNull(id);
         var event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found for this Id :: " + id));
-        return ResponseEntity.status(HttpStatus.OK).body(new EventSaveDTO(event));
+        return ResponseEntity.status(HttpStatus.OK).body(new EventResponseDTO(id));
     }
 }

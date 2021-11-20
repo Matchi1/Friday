@@ -28,18 +28,6 @@ public class Event {
         this.info = eventSaveDTO.info();
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setHeure(String heure) {
-        this.heure = heure;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
     public UUID getId() {
         return id;
     }
