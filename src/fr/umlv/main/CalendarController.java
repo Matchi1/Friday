@@ -9,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -33,7 +38,7 @@ public class CalendarController {
     }
 
     @PostMapping("/users/save")
-    public ResponseEntity<UserResponseDTO> putUser(@RequestBody UserSaveDTO user) {
+    public ResponseEntity<UserResponseDTO> putUser(@RequestBody UserSaveDTO user) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         Objects.requireNonNull(user);
         return userService.addUser(user.username(), user.password());
     }
@@ -43,7 +48,7 @@ public class CalendarController {
         Objects.requireNonNull(user);
         return userService.removeUser(user.id(), user.password());
     }
-
+    
     @GetMapping("/events/getAll")
     public ResponseEntity<List<EventResponseDTO>> getEvents() {
         return eventService.getEvents();
