@@ -1,7 +1,13 @@
 package fr.umlv.main.event;
 
-public record EventSaveDTO(String date, String heure, String info) {
-    EventSaveDTO (Event event) {
-        this(event.getDate(), event.getHeure(), event.getInfo());
+import fr.umlv.main.DateDetails;
+
+import java.util.Objects;
+
+public record EventSaveDTO(DateDetails dateStart, DateDetails dateEnd, String info) {
+    public EventSaveDTO {
+        Objects.requireNonNull(dateStart);
+        Objects.requireNonNull(dateEnd);
+        Objects.requireNonNull(info);
     }
 }

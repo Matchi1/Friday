@@ -4,5 +4,5 @@ import fr.umlv.main.user.User;
 
 import java.util.UUID;
 
-public record EventCredentialDTO(UUID id, User userId) {
+public record EventCredentialDTO(UUID id, User user) {
 }

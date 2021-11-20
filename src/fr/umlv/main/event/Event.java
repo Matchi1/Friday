@@ -1,9 +1,10 @@
 package fr.umlv.main.event;
 
+import fr.umlv.main.DateDetails;
 import fr.umlv.main.user.User;
 
 import javax.persistence.*;
-import java.util.UUID;
+import java.util.*;
 
 @Entity(name = "EVENT_DB")
 public class Event {
@@ -13,10 +14,12 @@ public class Event {
     private UUID id;
 
     @Column(nullable = false)
-    private String date;
+    private Date dateStart;
 
-    private String heure;
+    @Column(nullable = false)
+    private Date dateEnd;
 
+    @Column(nullable = false)
     private String info;
 
     @ManyToOne
@@ -25,47 +28,61 @@ public class Event {
     public Event() {
     }
 
-    public Event(EventSaveDTO eventSaveDTO) {
-        this.date = eventSaveDTO.date();
-        this.heure = eventSaveDTO.heure();
-        this.info = eventSaveDTO.info();
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setHeure(String heure) {
-        this.heure = heure;
-    }
-
-    public void setInfo(String info) {
+    private Event(Date dateStart, Date dateEnd, String info) {
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
         this.info = info;
+    }
+
+    private static Date createDateFromDateDetails(DateDetails details) {
+        var calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(details.year(), details.month(), details.day(), details.hour(), details.minute());
+        return calendar.getTime();
+    }
+
+    public static Event createEvent(EventSaveDTO eventDetails) {
+        Objects.requireNonNull(eventDetails);
+        var start = createDateFromDateDetails(eventDetails.dateStart());
+        var end = createDateFromDateDetails(eventDetails.dateEnd());
+        return new Event(start, end, eventDetails.info());
     }
 
     public UUID getId() {
         return id;
     }
 
-    public String getDate() {
-        return date;
+    public Date getDateStart() {
+        return dateStart;
     }
 
-    public String getHeure() {
-        return heure;
+    public Date getDateEnd() {
+        return dateEnd;
     }
 
     public String getInfo() {
         return info;
     }
 
+    public void setDateStart(DateDetails dateStartDetails) {
+        this.dateStart = createDateFromDateDetails(dateStartDetails);
+    }
+
+    public void setDateEnd(DateDetails dateEndDetails) {
+        this.dateEnd = createDateFromDateDetails(dateEndDetails);
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
     @Override
     public String toString() {
-        return "Event{" +
-                "id=" + id +
-                ", date=" + date +
-                ", heure=" + heure +
-                ", info=" + info +
-                '}';
+        var messages = new StringJoiner(",\n", "Event {\n", "}");
+        messages.add("id=" + id);
+        messages.add("starting date=" + dateStart.toString());
+        messages.add("ending date=" + dateEnd.toString());
+        messages.add("informations=" + info);
+        return messages.toString();
     }
 }
