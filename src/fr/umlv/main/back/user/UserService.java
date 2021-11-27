@@ -1,16 +1,13 @@
-package fr.umlv.main.user;
+package fr.umlv.main.back.user;
 
 import fr.umlv.main.crypt.CryptPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.net.URI;
 import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 

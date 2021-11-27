@@ -1,7 +1,7 @@
-package fr.umlv.main.user;
+package fr.umlv.main.back.user;
 
-import fr.umlv.main.crypt.CryptPassword;
-import fr.umlv.main.event.Event;
+import fr.umlv.main.back.crypt.CryptPassword;
+import fr.umlv.main.back.event.Event;
 
 import javax.crypto.IllegalBlockSizeException;
 import javax.persistence.*;

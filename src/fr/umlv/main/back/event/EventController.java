@@ -1,4 +1,4 @@
-package fr.umlv.main.event;
+package fr.umlv.main.back.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +25,17 @@ public class EventController {
         return eventService.removeEvent(event.id(), event.user());
     }
 
+    @GetMapping("/event/all")
+    public ResponseEntity<List<EventResponseDTO>> getEvents() {
+        return eventService.getEvents();
+    }
+
+    @DeleteMapping("/event/delete/{id}")
+    public ResponseEntity<EventResponseDTO> removeEventById(@PathVariable UUID id) {
+        Objects.requireNonNull(id);
+        return eventService.removeEventById(id);
+    }
+
     @PutMapping("/event/update/{id}")
     public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable UUID id,
@@ -32,11 +43,6 @@ public class EventController {
         Objects.requireNonNull(event);
         Objects.requireNonNull(id);
         return eventService.updateEvent(id, event);
-    }
-
-    @GetMapping("/event/getAll")
-    public ResponseEntity<List<EventResponseDTO>> getEvents() {
-        return eventService.getEvents();
     }
 
     @GetMapping("/event/get/{id}")

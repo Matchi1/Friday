@@ -1,6 +1,6 @@
-package fr.umlv.main.event;
+package fr.umlv.main.back.event;
 
-import fr.umlv.main.user.User;
+import fr.umlv.main.back.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,12 +34,35 @@ public class EventService {
 
     public ResponseEntity<EventResponseDTO> removeEvent(UUID id, User userId) {
         var event = eventRepository.findById(id);
-        if (event.isEmpty()) return ResponseEntity.notFound().build();
+        if (event.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         eventRepository.delete(event.get());
         return ResponseEntity.ok().build();
     }
 
-    public List<Event> getEvents() {
-        return eventRepository.findAll();
+    public ResponseEntity<EventResponseDTO> removeEventById(UUID id) {
+        var event = eventRepository.findById(id);
+        if (event.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        eventRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<List<EventResponseDTO>> getEvents() {
+        var events = eventRepository.findAll();
+        var response = events.stream()
+                .map(event -> new EventResponseDTO(event.getId()))
+                .toList();
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<EventResponseDTO> getEventById(UUID id) {
+        var event = eventRepository.findById(id);
+        if(event.isPresent()) {
+            return ResponseEntity.ok(new EventResponseDTO(event.get().getId()));
+        }
+        return ResponseEntity.notFound().build();
     }
 }
