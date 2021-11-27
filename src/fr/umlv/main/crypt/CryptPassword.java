@@ -1,30 +1,52 @@
 package fr.umlv.main.crypt;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
+@Component
+@Scope("singleton")
 public class CryptPassword {
-    private static final String encryptionKey = "CeSTfUNLeJAVAHa5";
-    private static final byte[] encryptionKeyBytes = encryptionKey.getBytes(); // Advanced Encryptiopn standard
-    private static final SecretKey secretKey = new SecretKeySpec(encryptionKeyBytes, "AES");
+    private final String encryptionKey = "CeSTfUNLeJAVAHa5";
+    private final byte[] encryptionKeyBytes = encryptionKey.getBytes(); // Advanced Encryptiopn standard
+    SecretKey secretKey = new SecretKeySpec(encryptionKeyBytes, "AES");
+    private final Cipher cipher;
+    private final Cipher decipher;
 
-    public static byte[] cryptedPassword (String password) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException {
+    public CryptPassword() throws InvalidKeyException {
+        try {
+            Cipher instance = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            this.cipher = instance;
+            this.decipher = instance;
+            this.cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            this.decipher.init(Cipher.DECRYPT_MODE, secretKey);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            throw new AssertionError("Algorithm or padding error");
+        }
+    }
+
+    public byte[] cryptedPassword (String password) throws IllegalBlockSizeException {
         Objects.requireNonNull(password);
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        return cipher.doFinal(password.getBytes());
+        try {
+            return cipher.doFinal(password.getBytes());
+        } catch (BadPaddingException e) {
+            throw new AssertionError("Padding error");
+        }
     }
 
 
-    public static String decryptedPassword (byte[] cryptedpassword) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public String decryptedPassword (byte[] cryptedpassword) throws IllegalBlockSizeException {
         Objects.requireNonNull(cryptedpassword);
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        var decryptedPassword = cipher.doFinal(cryptedpassword);
-        return new String(decryptedPassword);
+        try {
+            var decryptedPassword = decipher.doFinal(cryptedpassword);
+            return new String(decryptedPassword);
+        } catch (BadPaddingException e) {
+            throw new AssertionError("Padding error");
+        }
     }
-
 }

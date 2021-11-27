@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.crypto.IllegalBlockSizeException;
+import java.security.InvalidKeyException;
 import java.util.Objects;
 
 @RestController
@@ -51,7 +52,7 @@ public class CalendarController {
      */
 
     @PostMapping("/users/save")
-    public ResponseEntity<UserResponseDTO> putUser(@RequestBody UserSaveDTO user) {
+    public ResponseEntity<UserResponseDTO> putUser(@RequestBody UserSaveDTO user) throws IllegalBlockSizeException, InvalidKeyException {
         Objects.requireNonNull(user);
         return userService.addUser(user.username(), user.password());
     }
@@ -60,5 +61,11 @@ public class CalendarController {
     public ResponseEntity<?> removeUser(@RequestBody UserCredentialDTO user) {
         Objects.requireNonNull(user);
         return userService.removeUser(user.id(), user.password());
+    }
+
+    @PutMapping("/users/update")
+    public ResponseEntity<UserResponseDTO> updateUserPassword(@RequestBody UserCredentialDTO user) throws IllegalBlockSizeException, InvalidKeyException {
+        Objects.requireNonNull(user);
+        return userService.updatePassword(user.id(), user.password());
     }
 }

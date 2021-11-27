@@ -18,7 +18,7 @@ public class UserService {
     @Autowired
     private UserRepo userRepository;
 
-    public ResponseEntity<UserResponseDTO> addUser(String username, String password) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+    public ResponseEntity<UserResponseDTO> addUser(String username, String password) throws IllegalBlockSizeException, InvalidKeyException {
         var user = new User(username, password);
         var createdUser =  userRepository.save(user);
         return ResponseEntity
@@ -33,7 +33,7 @@ public class UserService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<UserResponseDTO> updatePassword(UUID id , String newPassword) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+    public ResponseEntity<UserResponseDTO> updatePassword(UUID id , String newPassword) throws IllegalBlockSizeException, InvalidKeyException {
         var user = userRepository.findById(id);
         if (user.isEmpty()) return ResponseEntity.notFound().build();
         user.get().setPassword(newPassword);
