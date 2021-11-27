@@ -24,7 +24,7 @@ public class CryptPassword {
             throw new AssertionError("Algorithm or padding error");
         }
     }
-
+    
     public String hash(String msg) {
         Objects.requireNonNull(msg);
         md.update(salt);

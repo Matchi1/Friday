@@ -23,7 +23,7 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user")
-    private ArrayList<Event> user;
+    private ArrayList<Event> events;
 
     public User(String username, String password)  {
         Objects.requireNonNull(username);
