@@ -1,22 +1,16 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.umlv.main.CalendarController;
+import fr.umlv.main.user.UserController;
 import fr.umlv.main.user.UserSaveDTO;
+import fr.umlv.main.user.UserService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@ExtendWith(SpringExtension.class)
-@AutoConfigureMockMvc
-@AutoConfigureWebMvc
-@SpringBootTest(classes = SpringBootTest.class)
+@WebMvcTest(UserController.class)
 public class UserWebTest {
     @Autowired
     private MockMvc mockMvc;
@@ -25,7 +19,7 @@ public class UserWebTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private CalendarController controller;
+    private UserService service;
 
     @Test
     void addUserRequestPath() throws Exception {

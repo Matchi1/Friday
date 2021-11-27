@@ -32,6 +32,7 @@ public class EventWebTest {
 	@MockBean
 	private UserService userService;
 
+	/*
     @Test
     void shouldRespond201WhenAddNewEvent() throws Exception {
 		var eventSave = new EventSaveDTO("2021-11-10", "23:14", "add event test");
@@ -104,6 +105,7 @@ public class EventWebTest {
 		mockMvc.perform(mockRequest)
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
+	 */
 
 	@Test
 	void shouldRespondIsOkWhenRemoveEvent() throws Exception {
