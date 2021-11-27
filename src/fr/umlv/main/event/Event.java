@@ -12,23 +12,20 @@ public class Event {
     @Column(nullable = false)
     private UUID id;
 
+    @Column(nullable = false)
     private String date;
 
     private String heure;
 
     private String info;
 
-    @ManyToOne
-    private User user;
-
-    public Event(String date, String heure, String info) {
-        this.date = date;
-        this.heure = heure;
-        this.info = info;
+    public Event() {
     }
 
-    public Event() {
-
+    public Event(EventSaveDTO eventSaveDTO) {
+        this.date = eventSaveDTO.date();
+        this.heure = eventSaveDTO.heure();
+        this.info = eventSaveDTO.info();
     }
 
     public void setDate(String date) {
@@ -57,6 +54,18 @@ public class Event {
 
     public String getInfo() {
         return info;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setHeure(String heure) {
+        this.heure = heure;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     @Override

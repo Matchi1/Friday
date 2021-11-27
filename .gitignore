@@ -23,3 +23,8 @@
 # http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+# Specific directory
+target
+db
+tokens
+.idea
