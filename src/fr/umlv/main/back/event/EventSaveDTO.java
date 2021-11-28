@@ -10,4 +10,8 @@ public record EventSaveDTO(DateDetails dateStart, DateDetails dateEnd, String in
         Objects.requireNonNull(dateEnd);
         Objects.requireNonNull(info);
     }
+
+    public EventSaveDTO(DateDetails dateStart, String info) {
+        this(dateStart, dateStart, info);
+    }
 }

@@ -29,6 +29,9 @@ public class Event {
     }
 
     private Event(Date dateStart, Date dateEnd, String info) {
+        Objects.requireNonNull(dateStart);
+        Objects.requireNonNull(dateEnd);
+        Objects.requireNonNull(info);
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.info = info;
