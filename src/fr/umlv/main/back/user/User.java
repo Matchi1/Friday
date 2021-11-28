@@ -25,7 +25,12 @@ public class User {
     @OneToMany(mappedBy = "user")
     private ArrayList<Event> events;
 
+<<<<<<< HEAD
     public User(String username, String password)  {
+=======
+
+    public User(String username, byte[] password) {
+>>>>>>> src/fr.umlv.main.user: Update usage of cripter
         Objects.requireNonNull(username);
         Objects.requireNonNull(password);
         this.username = username;
@@ -33,10 +38,13 @@ public class User {
     }
 
     public User() {
-
     }
 
+<<<<<<< HEAD
     public void setPassword(String password) {
+=======
+    public void setPassword(byte[] password) {
+>>>>>>> src/fr.umlv.main.user: Update usage of cripter
         this.password = password;
     }
 
