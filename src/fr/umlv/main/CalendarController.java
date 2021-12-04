@@ -52,7 +52,7 @@ public class CalendarController {
      */
 
     @PostMapping("/users/save")
-    public ResponseEntity<UserResponseDTO> putUser(@RequestBody UserSaveDTO user) throws IllegalBlockSizeException, InvalidKeyException {
+    public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserSaveDTO user) {
         Objects.requireNonNull(user);
         return userService.addUser(user.username(), user.password());
     }
@@ -64,7 +64,7 @@ public class CalendarController {
     }
 
     @PutMapping("/users/update")
-    public ResponseEntity<UserResponseDTO> updateUserPassword(@RequestBody UserCredentialDTO user) throws IllegalBlockSizeException, InvalidKeyException {
+    public ResponseEntity<UserResponseDTO> updateUserPassword(@RequestBody UserCredentialDTO user)  {
         Objects.requireNonNull(user);
         return userService.updatePassword(user.id(), user.password());
     }

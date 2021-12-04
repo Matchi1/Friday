@@ -1,5 +1,6 @@
 package fr.umlv.main.user;
 
+import fr.umlv.main.crypt.CryptPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,10 @@ public class UserService {
     @Autowired
     private UserRepo userRepository;
 
-    public ResponseEntity<UserResponseDTO> addUser(String username, String password) throws IllegalBlockSizeException, InvalidKeyException {
-        var user = new User(username, password);
+
+    public ResponseEntity<UserResponseDTO> addUser(String username, String password) {
+        var crypt = new CryptPassword();
+        var user = new User(username, crypt.hash(password));
         var createdUser =  userRepository.save(user);
         return ResponseEntity
                 .created(URI.create("/users/save/" + createdUser.getId()))
@@ -33,10 +36,11 @@ public class UserService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<UserResponseDTO> updatePassword(UUID id , String newPassword) throws IllegalBlockSizeException, InvalidKeyException {
+    public ResponseEntity<UserResponseDTO> updatePassword(UUID id , String newPassword) {
+        var crypt = new CryptPassword();
         var user = userRepository.findById(id);
         if (user.isEmpty()) return ResponseEntity.notFound().build();
-        user.get().setPassword(newPassword);
+        user.get().setPassword(crypt.hash(newPassword));
         userRepository.save(user.get());
         return ResponseEntity
                 .created(URI.create("/users/update/" + user.get().getId()))

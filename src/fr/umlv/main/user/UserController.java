@@ -20,7 +20,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/users/save")
-    public ResponseEntity<UserResponseDTO> putUser(@RequestBody UserSaveDTO user) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+    public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserSaveDTO user) {
         Objects.requireNonNull(user);
         return userService.addUser(user.username(), user.password());
     }
