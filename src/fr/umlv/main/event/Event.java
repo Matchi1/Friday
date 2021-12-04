@@ -19,6 +19,9 @@ public class Event {
 
     private String info;
 
+    @ManyToOne
+    private User user;
+
     public Event() {
     }
 
