@@ -20,28 +20,24 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private byte[] password;
+    private String password;
 
     @OneToMany(mappedBy = "user")
     private ArrayList<Event> user;
 
-
-    public User(String username, String password) throws IllegalBlockSizeException, InvalidKeyException {
+    public User(String username, String password)  {
         Objects.requireNonNull(username);
         Objects.requireNonNull(password);
-        CryptPassword cryptPassword = new CryptPassword();
         this.username = username;
-        this.password = cryptPassword.cryptedPassword(password);
+        this.password = password;
     }
 
     public User() {
 
     }
 
-
-    public void setPassword(String password) throws IllegalBlockSizeException, InvalidKeyException {
-        CryptPassword cryptPassword = new CryptPassword();
-        this.password = cryptPassword.cryptedPassword(password);
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public UUID getId() {
@@ -50,10 +46,5 @@ public class User {
 
     public String getUsername() {
         return username;
-    }
-
-    public String getPassword() throws IllegalBlockSizeException, InvalidKeyException {
-        CryptPassword cryptPassword = new CryptPassword();;
-        return cryptPassword.decryptedPassword(password);
     }
 }
