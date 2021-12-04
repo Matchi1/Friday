@@ -7,13 +7,9 @@ import java.security.InvalidKeyException;
 import java.util.Objects;
 import java.util.UUID;
 
-public record UserCredentialDTO(UUID id, byte[] password) {
+public record UserCredentialDTO(UUID id, String password) {
     public UserCredentialDTO {
         Objects.requireNonNull(id);
         Objects.requireNonNull(password);
-    }
-
-    public UserCredentialDTO(UUID id, String password) throws InvalidKeyException, IllegalBlockSizeException {
-        this(id, CryptPassword.createCrypter().cryptedPassword(password));
     }
 }

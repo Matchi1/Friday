@@ -13,13 +13,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-<<<<<<< HEAD
     @PostMapping("/users/save")
     public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserSaveDTO user) {
-=======
-    @PostMapping("/user/save")
-    public ResponseEntity<UserResponseDTO> putUser(@RequestBody UserSaveDTO user) {
->>>>>>> src/fr.umlv.main.user: Update usage of cripter
         Objects.requireNonNull(user);
         return userService.addUser(user.username(), user.password());
     }

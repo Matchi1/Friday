@@ -6,13 +6,9 @@ import javax.crypto.IllegalBlockSizeException;
 import java.security.InvalidKeyException;
 import java.util.Objects;
 
-public record UserSaveDTO(String username, byte[] password) {
+public record UserSaveDTO(String username, String password) {
     public UserSaveDTO {
         Objects.requireNonNull(username);
         Objects.requireNonNull(password);
-    }
-
-    public UserSaveDTO(String username, String password) throws InvalidKeyException, IllegalBlockSizeException {
-        this(username, CryptPassword.createCrypter().cryptedPassword(password));
     }
 }
