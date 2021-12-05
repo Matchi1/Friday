@@ -25,7 +25,8 @@ public class Event {
     @Column(nullable = false)
     private String info;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
     private User user;
 
     public Event() {

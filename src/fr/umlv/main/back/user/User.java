@@ -1,13 +1,10 @@
 package fr.umlv.main.back.user;
 
-import fr.umlv.main.back.crypt.CryptPassword;
 import fr.umlv.main.back.event.Event;
 
-import javax.crypto.IllegalBlockSizeException;
 import javax.persistence.*;
-import java.security.InvalidKeyException;
-import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "USER_DB")
@@ -22,8 +19,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    private ArrayList<Event> events;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private Set<Event> events;
 
     public User(String username, String password)  {
         Objects.requireNonNull(username);
