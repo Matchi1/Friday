@@ -13,7 +13,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/users/save")
+    @PostMapping("/user/save")
     public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserSaveDTO user) {
         Objects.requireNonNull(user);
         return userService.addUser(user.username(), user.password());
@@ -22,7 +22,7 @@ public class UserController {
     @DeleteMapping("/user/delete")
     public ResponseEntity<UserResponseDTO> removeUser(@RequestBody UserCredentialDTO user) {
         Objects.requireNonNull(user);
-        return userService.removeUser(user.id(), user.password());
+        return userService.removeUser(user.id());
     }
 
     @GetMapping("/user/get/{id}")

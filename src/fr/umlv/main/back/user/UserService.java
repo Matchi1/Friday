@@ -24,25 +24,25 @@ public class UserService {
                 .body(new UserResponseDTO(createdUser.getId(), createdUser.getUsername()));
     }
 
-    public ResponseEntity<UserResponseDTO> removeUser(UUID id, byte[] password) {
+    public ResponseEntity<UserResponseDTO> removeUser(UUID id) {
         Objects.requireNonNull(id);
-        Objects.requireNonNull(password);
-        var user = userRepository.findById(id);
-        if (user.isEmpty()) {
+        if (userRepository.findById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        userRepository.delete(user.get());
+        userRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<UserResponseDTO> updatePassword(UUID id , String newPassword) {
         var crypt = new CryptPassword();
         var user = userRepository.findById(id);
-        if (user.isEmpty()) return ResponseEntity.notFound().build();
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         user.get().setPassword(crypt.hash(newPassword));
-        userRepository.save(user.get());
+        var updatedUser = userRepository.save(user.get());
         return ResponseEntity
-                .created(URI.create("/users/update/" + updatedUser.getId()))
+                .created(URI.create("/user/update/" + updatedUser.getId()))
                 .body(new UserResponseDTO(updatedUser.getId(), updatedUser.getUsername()));
     }
 
