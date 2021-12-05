@@ -19,7 +19,7 @@ public class EventService {
         Objects.requireNonNull(eventDetails);
         var event = Event.createEvent(eventDetails);
         eventRepository.save(event);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new EventResponseDTO(event.getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new EventResponseDTO(event));
     }
 
     public ResponseEntity<EventResponseDTO> updateEvent(UUID id, EventSaveDTO eventSave) {
@@ -29,7 +29,7 @@ public class EventService {
         event.setDateEnd(eventSave.dateEnd());
         event.setInfo(eventSave.info());
         final var updatedEvent = eventRepository.save(event);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new EventResponseDTO(updatedEvent.getId()));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new EventResponseDTO(updatedEvent));
     }
 
     public ResponseEntity<EventResponseDTO> removeEvent(UUID id, User userId) {
@@ -53,7 +53,7 @@ public class EventService {
     public ResponseEntity<List<EventResponseDTO>> getEvents() {
         var events = eventRepository.findAll();
         var response = events.stream()
-                .map(event -> new EventResponseDTO(event.getId()))
+                .map(EventResponseDTO::new)
                 .toList();
         return ResponseEntity.ok(response);
     }
@@ -61,7 +61,7 @@ public class EventService {
     public ResponseEntity<EventResponseDTO> getEventById(UUID id) {
         var event = eventRepository.findById(id);
         if(event.isPresent()) {
-            return ResponseEntity.ok(new EventResponseDTO(event.get().getId()));
+            return ResponseEntity.ok(new EventResponseDTO(event.get()));
         }
         return ResponseEntity.notFound().build();
     }

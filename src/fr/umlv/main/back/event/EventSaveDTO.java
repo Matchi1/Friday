@@ -4,14 +4,14 @@ import fr.umlv.main.DateDetails;
 
 import java.util.Objects;
 
-public record EventSaveDTO(DateDetails dateStart, DateDetails dateEnd, String info) {
+public record EventSaveDTO(String title, DateDetails dateStart, DateDetails dateEnd, String info) {
     public EventSaveDTO {
         Objects.requireNonNull(dateStart);
         Objects.requireNonNull(dateEnd);
         Objects.requireNonNull(info);
     }
 
-    public EventSaveDTO(DateDetails dateStart, String info) {
-        this(dateStart, dateStart, info);
+    public EventSaveDTO(String title, DateDetails dateStart, String info) {
+        this(title, dateStart, dateStart, info);
     }
 }

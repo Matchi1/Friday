@@ -13,6 +13,9 @@ public class Event {
     @Column(nullable = false)
     private UUID id;
 
+    @Column
+    private String title;
+
     @Column(nullable = false)
     private Date dateStart;
 
@@ -26,12 +29,18 @@ public class Event {
     private User user;
 
     public Event() {
+        this.title = "";
+        this.id = UUID.randomUUID();
+        this.dateStart = new Date();
+        this.dateEnd = new Date();
+        this.info = "";
     }
 
-    private Event(Date dateStart, Date dateEnd, String info) {
+    private Event(String title, Date dateStart, Date dateEnd, String info) {
         Objects.requireNonNull(dateStart);
         Objects.requireNonNull(dateEnd);
         Objects.requireNonNull(info);
+        this.title = title;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.info = info;
@@ -48,11 +57,15 @@ public class Event {
         Objects.requireNonNull(eventDetails);
         var start = createDateFromDateDetails(eventDetails.dateStart());
         var end = createDateFromDateDetails(eventDetails.dateEnd());
-        return new Event(start, end, eventDetails.info());
+        return new Event(eventDetails.title(), start, end, eventDetails.info());
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public Date getDateStart() {
