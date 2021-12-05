@@ -94,6 +94,23 @@ public class Event {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        var event = (Event) o;
+        return dateStart.equals(event.dateStart) && dateEnd.equals(event.dateEnd) && user.equals(event.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dateStart, dateEnd, user);
+    }
+
+    @Override
     public String toString() {
         var messages = new StringJoiner(",\n", "Event {\n", "}");
         messages.add("id=" + id);

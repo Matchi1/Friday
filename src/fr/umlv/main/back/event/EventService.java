@@ -2,6 +2,8 @@ package fr.umlv.main.back.event;
 
 import fr.umlv.main.back.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
@@ -15,8 +17,22 @@ public class EventService {
     @Autowired
     private EventRepo eventRepository;
 
+    private boolean containsEvent(EventSaveDTO eventDetails) {
+        var exempleMatcher = ExampleMatcher.matchingAll()
+                .withMatcher("id", ExampleMatcher.GenericPropertyMatchers.ignoreCase())
+                .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.ignoreCase())
+                .withMatcher("information", ExampleMatcher.GenericPropertyMatchers.ignoreCase())
+                .withMatcher("user", ExampleMatcher.GenericPropertyMatchers.ignoreCase());
+        var example = Example.of(Event.createEvent(eventDetails), exempleMatcher);
+        var event = eventRepository.findOne(example);
+        return event.isPresent();
+    }
+
     public ResponseEntity<EventResponseDTO> addEvent(EventSaveDTO eventDetails) {
         Objects.requireNonNull(eventDetails);
+        if(containsEvent(eventDetails)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
         var event = Event.createEvent(eventDetails);
         eventRepository.save(event);
         return ResponseEntity.status(HttpStatus.CREATED).body(new EventResponseDTO(event));
