@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.UUID;
 
 @WebMvcTest(EventController.class)
@@ -32,9 +33,10 @@ public class EventWebTest {
     @Test
     void shouldRespond201WhenAddNewEvent() throws Exception {
 		var start = new DateDetails(2021, 11, 10, 23, 14);
-		var eventSave = new EventSaveDTO(start, "add event test");
+		var eventSave = new EventSaveDTO("", start, "add event test");
+		var response = new EventResponseDTO(UUID.randomUUID(), "", new Date(), new Date(), "");
 		Mockito.when(eventService.addEvent(eventSave))
-				.thenReturn(new ResponseEntity<>(new EventResponseDTO(UUID.randomUUID()), HttpStatus.CREATED));
+				.thenReturn(new ResponseEntity<>(response, HttpStatus.CREATED));
         var mockRequest = MockMvcRequestBuilders
                 .post("/event/add")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -57,7 +59,7 @@ public class EventWebTest {
 	void shouldThrowNotFoundExceptionWhenUpdateEventNotExist() throws Exception {
 		var id = UUID.randomUUID();
 		var start = new DateDetails(2021, 11, 10, 23, 14);
-		var eventSave = new EventSaveDTO(start, "add event test");
+		var eventSave = new EventSaveDTO("", start, "add event test");
 		Mockito.when(eventService.updateEvent(id, eventSave))
 				.thenThrow(new ResourceNotFoundException("Event not found"));
 		var mockRequest = MockMvcRequestBuilders
@@ -72,7 +74,7 @@ public class EventWebTest {
 	void shouldSucceedWhenUpdateEvent() throws Exception {
 		var id = UUID.randomUUID();
 		var start = new DateDetails(2021, 11, 10, 23, 14);
-		var eventSave = new EventSaveDTO(start,"add event test");
+		var eventSave = new EventSaveDTO("", start,"add event test");
 		Mockito.when(eventService.updateEvent(id, eventSave))
 				.thenReturn(ResponseEntity.accepted().build());
 		var mockRequest = MockMvcRequestBuilders
