@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import javax.persistence.EntityNotFoundException;
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -34,8 +35,10 @@ public class EventService {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         var event = Event.createEvent(eventDetails);
-        eventRepository.save(event);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new EventResponseDTO(event));
+        final var addedEvent = eventRepository.save(event);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .location(URI.create("/event/get/" + addedEvent.getId()))
+                .body(new EventResponseDTO(event));
     }
 
     public ResponseEntity<EventResponseDTO> updateEvent(UUID id, EventSaveDTO eventSave) {
@@ -45,7 +48,9 @@ public class EventService {
         event.setDateEnd(eventSave.dateEnd());
         event.setInfo(eventSave.info());
         final var updatedEvent = eventRepository.save(event);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new EventResponseDTO(updatedEvent));
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .location(URI.create("/event/get/" + updatedEvent.getId()))
+                .body(new EventResponseDTO(updatedEvent));
     }
 
     public ResponseEntity<EventResponseDTO> removeEvent(UUID id, User userId) {
