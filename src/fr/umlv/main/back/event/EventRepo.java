@@ -5,6 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+/**
+ * This interface provides communication between the event table from a DB and
+ * the software layer.
+ */
 @Repository
 public interface EventRepo extends JpaRepository<Event, UUID> {
 }
