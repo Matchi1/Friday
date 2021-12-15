@@ -7,6 +7,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * This class is responsible of representing an user and its characteristic
+ */
 @Entity(name = "USER_DB")
 public class User {
     @Id
@@ -23,24 +26,47 @@ public class User {
             cascade = CascadeType.ALL)
     private Set<Event> events;
 
+	/**
+	 * Contructs an Event according to the specified username and password
+	 *
+	 * @param username the specified username
+	 * @param password the specified password
+	 *
+	 * @throws NullPointerException if one of the specified argument is null
+	 */
     public User(String username, String password)  {
-        Objects.requireNonNull(username);
-        Objects.requireNonNull(password);
-        this.username = username;
-        this.password = password;
+        this.username = Objects.requireNonNull(username);
+        this.password = Objects.requireNonNull(password);
     }
 
     public User() {
     }
 
+	/**
+	 * Set the a new password according to the specified password
+	 *
+	 * @param password the specified password
+	 *
+	 * @throws NullPointerException if the specified argument is null
+	 */
     public void setPassword(String password) {
-        this.password = password;
+        this.password = Objects.requireNonNull(password);
     }
 
+	/**
+	 * Retrieve the id of the user
+	 *
+	 * @return the id of the user
+	 */
     public UUID getId() {
         return id;
     }
 
+	/**
+	 * Retrieve the username of the user
+	 *
+	 * @return the id of the user
+	 */
     public String getUsername() {
         return username;
     }
