@@ -27,6 +27,11 @@ const routes = [
     path: '/fullcalendar',
     name: 'FullCalendar',
     component: () => import('../views/FullCalendar.vue')
+  },
+  {
+    path: '/connexion',
+    name: 'Connexion',
+    component: () => import('../views/Connexion-view.vue')
   }
 ]
 
