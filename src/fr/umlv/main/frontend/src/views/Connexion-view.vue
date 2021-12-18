@@ -6,10 +6,11 @@
 </template>
 
 <script>
-import Connexion from "@/components/Connexion";
+import Connexion from "@/components/Connexion-component";
 
 export default {
-  name: "Connexion",
+  name: "Connexion-view",
+
   components: {
     Connexion
   }
