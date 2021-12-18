@@ -1,7 +1,11 @@
 <template>
+  <head>
+    <meta charset="UTF-8"/>
+    <link href="../assets/formStyle.css" rel="stylesheet">
+  </head>
   <form>
     <div>
-      <h1 class="text-4x1 text-blue-500">Connexion</h1>
+      <h1>Connexion</h1>
       <label><b>Username</b></label>
       <input type="text" placeholder="Enter your username here" v-model="username" required>
       <label><b>Password</b></label>
