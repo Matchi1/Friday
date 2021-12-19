@@ -1,9 +1,4 @@
 <template>
-  <div>
-  <head>
-    <meta charset="UTF-8"/>
-    <link href="../assets/formStyle.css" rel="stylesheet">
-  </head>
   <form>
     <div>
       <h1 class="font-bold text-green-500">Connexion</h1>
@@ -14,9 +9,7 @@
       <input  type="submit" value="Sumbit">
     </div>
   </form>
-  </div>
 </template>
-
 <script>
 
 export default {
