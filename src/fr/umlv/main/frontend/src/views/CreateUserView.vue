@@ -1,10 +1,15 @@
 <template>
-
+  <CreateUserComponent/>
 </template>
 
 <script>
+import CreateUserComponent from "@/components/CreateUserComponent";
+
 export default {
-  name: "CreateUserView"
+  name: "CreateUserView",
+  components: {
+    CreateUserComponent
+  }
 }
 </script>
 

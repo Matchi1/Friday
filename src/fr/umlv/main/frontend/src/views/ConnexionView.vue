@@ -1,14 +1,12 @@
 <template>
-  <div>
     <Connexion/>
-  </div>
 </template>
 
 <script>
 import Connexion from "@/components/ConnexionComponent";
 
 export default {
-  name: "Connexion-view",
+  name: "ConnexionView",
 
   components: {
     Connexion

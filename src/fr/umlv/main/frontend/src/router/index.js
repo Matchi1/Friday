@@ -32,6 +32,11 @@ const routes = [
     path: '/connexion',
     name: 'Connexion',
     component: () => import('../views/ConnexionView.vue')
+  },
+  {
+    path: '/createUser',
+    name: 'CreateUser',
+    component: () => import('../views/CreateUserView.vue')
   }
 ]
 

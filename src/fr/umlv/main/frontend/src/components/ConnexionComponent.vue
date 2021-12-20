@@ -25,7 +25,7 @@
 
 export default {
 
-  name: "Connexion-component",
+  name: "ConnexionComponent",
 
   data: () => ({
     username: "",
