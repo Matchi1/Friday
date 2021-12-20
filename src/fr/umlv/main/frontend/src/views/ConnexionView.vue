@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Connexion from "@/components/Connexion-component";
+import Connexion from "@/components/ConnexionComponent";
 
 export default {
   name: "Connexion-view",
