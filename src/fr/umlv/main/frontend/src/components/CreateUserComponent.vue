@@ -26,7 +26,7 @@
       </div>
     <div>
       <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline" type="button" v-on:click="register">
-        <router-link to="/connexion" v-if="booleanPassword">Register</router-link>
+        Register
       </button>
       <div v-if="booleanPassword">Mot de passe différent</div>
     </div>
@@ -40,7 +40,7 @@ export default {
     username: '',
     password: '',
     confirm: '',
-    booleanPassword: false
+    booleanPassword: false,
   }),
 
   methods: {
@@ -52,7 +52,13 @@ export default {
               method:'POST',
               body: JSON.stringify({username: this.username, password: this.password})
             }
-        )
+        ).then(function(res)
+        {
+          if ( res == "statut obtenu apres le fetch") {
+            this.$router.push("Connexion")
+          }
+          print(res)
+        })
       } else {
         this.booleanPassword = true
         print("zebi")
