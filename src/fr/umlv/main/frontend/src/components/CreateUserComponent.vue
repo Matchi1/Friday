@@ -24,10 +24,13 @@
         </label>
         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="confirm" type="password" placeholder="Confirm your password"  v-model="confirm" required>
       </div>
-    <div>
+    <div class="flex items-center justify-between">
       <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline" type="button" v-on:click="register">
         Register
       </button>
+      <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+        <router-link to="/connexion">Already have an account</router-link>
+      </a>
       <div v-if="booleanPassword">Mot de passe différent</div>
     </div>
   </form>
