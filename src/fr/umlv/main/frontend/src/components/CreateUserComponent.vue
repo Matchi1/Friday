@@ -5,7 +5,7 @@
         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="username">
           Username
         </label>
-        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="username" type="text" placeholder="Username">
+        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="username" type="text" placeholder="Username" v-model="username">
         <p class="text-red-500 text-xs italic">Please fill out this field.</p>
       </div>
     </div>
@@ -14,7 +14,7 @@
         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="password">
           Password
         </label>
-        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="password" type="password" placeholder="Password">
+        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="password" type="password" placeholder="Password" v-model="password">
         <p class="text-gray-600 text-xs italic">Mettre une règle pour les mdp ici (peut-etre utf-8)</p>
       </div>
     </div>
@@ -25,9 +25,10 @@
         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="confirm" type="password" placeholder="Confirm your password"  v-model="confirm" required>
       </div>
     <div>
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline" type="button">
-        Register
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline" type="button" v-on:click="register">
+        <router-link to="/connexion" v-if="booleanPassword">Register</router-link>
       </button>
+      <div v-if="booleanPassword">Mot de passe différent</div>
     </div>
   </form>
 </template>
@@ -38,7 +39,25 @@ export default {
   data: () => ({
     username: '',
     password: '',
-    confirm:''
-  })
+    confirm: '',
+    booleanPassword: false
+  }),
+
+  methods: {
+    register() {
+      if (this.password === this.confirm) {
+        print("${this.password} ${this.username}")
+        fetch("/user/save",
+            {
+              method:'POST',
+              body: JSON.stringify({username: this.username, password: this.password})
+            }
+        )
+      } else {
+        this.booleanPassword = true
+        print("zebi")
+      }
+    }
+  }
 }
 </script>
