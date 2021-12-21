@@ -5,8 +5,7 @@
       <router-link to="/about">About</router-link> |
       <router-link to="/dashboard">Dashboard</router-link> |
       <router-link to="/fullcalendar">FullCalendar</router-link> |
-      <router-link to="/connexion">Connexion</router-link> |
-      <router-link to="/createUser">Create User</router-link>
+      <router-link to="/connexion">Connexion</router-link>
     </div>
     <router-view/>
   </div>
