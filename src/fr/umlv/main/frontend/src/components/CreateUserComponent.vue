@@ -49,7 +49,7 @@ export default {
   methods: {
     register() {
       if (this.password === this.confirm) {
-        print("${this.password} ${this.username}")
+        console.log("${this.password} ${this.username}")
         fetch("/user/save",
             {
               method:'POST',
@@ -57,14 +57,14 @@ export default {
             }
         ).then(function(res)
         {
-          if ( res == "statut obtenu apres le fetch") {
+          if ( res.status === 201) {
             this.$router.push("Connexion")
           }
-          print(res)
+          console.log(res)
         })
       } else {
         this.booleanPassword = true
-        print("zebi")
+        console.log("zebi")
       }
     }
   }

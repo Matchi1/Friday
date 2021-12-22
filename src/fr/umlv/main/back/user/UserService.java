@@ -2,6 +2,7 @@ package fr.umlv.main.back.user;
 
 import fr.umlv.main.back.crypt.CryptPassword;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -75,8 +76,8 @@ public class UserService {
         }
         user.get().setPassword(crypt.hash(newPassword));
         var updatedUser = userRepository.save(user.get());
-        return ResponseEntity
-                .created(URI.create("/user/update/" + updatedUser.getId()))
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .location(URI.create("/user/update/" + updatedUser.getId()))
                 .body(new UserResponseDTO(updatedUser.getId(), updatedUser.getUsername()));
     }
 
