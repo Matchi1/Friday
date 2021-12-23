@@ -37,7 +37,10 @@
 </template>
 
 <script>
+import router from "@/router";
+
 export default {
+
   name: "CreateUserComponent",
   data: () => ({
     username: '',
@@ -49,24 +52,22 @@ export default {
   methods: {
     register() {
       if (this.password === this.confirm) {
-        console.log("${this.password} ${this.username}")
         fetch("/user/save",
             {
-              method:'POST',
+              method: 'POST',
+              headers: {"Content-Type": "application/json"},
               body: JSON.stringify({username: this.username, password: this.password})
             }
-        ).then(function(res)
-        {
-          if ( res.status === 201) {
-            this.$router.push("Connexion")
+        ).then(function (res) {
+          if (res.status === 201) {
+            router.push("Connexion")
           }
-          console.log(res)
         })
       } else {
         this.booleanPassword = true
-        console.log("zebi")
       }
     }
   }
+
 }
 </script>
