@@ -31,7 +31,7 @@ export default {
     username: "",
     password: ""
   }),
-
+  /*
   methods: {
     connexion() {
       fetch("/user/connexion",
@@ -44,6 +44,8 @@ export default {
       }
     }
   }
+
+ */
 }
 
 </script>

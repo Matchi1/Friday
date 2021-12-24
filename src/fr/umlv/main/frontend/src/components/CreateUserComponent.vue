@@ -47,6 +47,7 @@ export default {
     password: '',
     confirm: '',
     booleanPassword: false,
+    booleanUsername: false,
   }),
 
   methods: {
@@ -59,15 +60,9 @@ export default {
               body: JSON.stringify({username: this.username, password: this.password})
             }
         ).then(function (res) {
-          function alreadyRegistered() {
-            fetch("/user/alreadyRegistered",
-                {
-                  method: 'POST',
-                  headers: {"Content-Type": "application/json"},
-                  body: JSON.stringify({username: this.username})
-                })
-          }
-          if (res.status === 201 && alreadyRegistered()) {
+          if (this.alreadyRegistered()) {
+            this.booleanUsername = true
+          } else if (res.status === 201) {
             router.push("Connexion")
           }
         })
@@ -75,6 +70,14 @@ export default {
         this.booleanPassword = true
       }
     }
+  },
+  alreadyRegistered() {
+    fetch("/user/alreadyRegistered",
+        {
+          method: 'POST',
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({username: this.username})
+        }).then( res => { return res })
   }
 }
 </script>
