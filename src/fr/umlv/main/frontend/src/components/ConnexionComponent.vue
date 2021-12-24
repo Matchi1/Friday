@@ -43,7 +43,14 @@ export default {
             body: JSON.stringify({username: this.username, password: this.password})
           }).then(function (res) {
           if (res.status === 201) {
-            fetch("/user/")
+            fetch("/user/postId",
+                {
+                  method: 'POST',
+                  headers: {"Content-Type": "application/json"},
+                  body: JSON.stringify({username: this.username, password:this.password})
+                }).then(function (res) {
+              //Faire en sorte de garder l'id pour faire les sessions
+            })
             router.push("/dashboard")
           }
       })
