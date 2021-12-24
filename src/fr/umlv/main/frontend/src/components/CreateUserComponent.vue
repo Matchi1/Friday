@@ -67,7 +67,18 @@ export default {
         this.booleanPassword = true
       }
     }
+  },
+
+  alreadyRegistered() {
+    fetch("/user/alreadyRegistered",
+        {
+          method: 'POST',
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({username: this.username})
+        }).then()
   }
+
+
 
 }
 </script>
