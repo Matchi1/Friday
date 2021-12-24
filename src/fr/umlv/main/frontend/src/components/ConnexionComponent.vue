@@ -31,6 +31,19 @@ export default {
     username: "",
     password: ""
   }),
+
+  methods: {
+    connexion() {
+      fetch("/user/connexion",
+          {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username: this.username, password: this.password})
+          }).then(function (res) {
+
+      }
+    }
+  }
 }
 
 </script>
