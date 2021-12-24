@@ -31,8 +31,8 @@
       <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
         <router-link to="/connexion">Already have an account</router-link>
       </a>
-      <div v-if="booleanPassword">Mot de passe différent</div>
     </div>
+    <div v-if="booleanPassword" class="pt-1.5 text-red-500">Mot de passe différent</div>
   </form>
 </template>
 
