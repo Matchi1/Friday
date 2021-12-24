@@ -23,6 +23,8 @@
 </template>
 <script>
 
+import router from "@/router";
+
 export default {
 
   name: "ConnexionComponent",
@@ -31,7 +33,7 @@ export default {
     username: "",
     password: ""
   }),
-  /*
+
   methods: {
     connexion() {
       fetch("/user/connexion",
@@ -40,12 +42,14 @@ export default {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({username: this.username, password: this.password})
           }).then(function (res) {
-
-      }
+          if (res.status === 201) {
+            fetch("/user/")
+            router.push("/dashboard")
+          }
+      })
     }
   }
 
- */
 }
 
 </script>

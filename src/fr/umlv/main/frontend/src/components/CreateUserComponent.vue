@@ -33,6 +33,7 @@
       </a>
     </div>
     <div v-if="booleanPassword" class="pt-1.5 text-red-500">Mot de passe différent</div>
+    <div v-if="booleanUsername" class="pt-1.5 text-red-500">Cet Username existe déjà</div>
   </form>
 </template>
 
@@ -46,11 +47,24 @@ export default {
     username: '',
     password: '',
     confirm: '',
-    booleanPassword: false,
     booleanUsername: false,
+    booleanPassword: false,
   }),
 
   methods: {
+    alreadyRegistered() {
+      fetch("/user/alreadyRegistered",
+          {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username: this.username})
+          }).then( function (res) {
+        if (res.status === 201) {
+          this.booleanUsername = true
+        }
+      })
+    },
+
     register() {
       if (this.password === this.confirm) {
         fetch("/user/save",
@@ -60,9 +74,8 @@ export default {
               body: JSON.stringify({username: this.username, password: this.password})
             }
         ).then(function (res) {
-          if (this.alreadyRegistered()) {
-            this.booleanUsername = true
-          } else if (res.status === 201) {
+          this.alreadyRegistered()
+          if (res.status === 201 && !this.booleanUsername) {
             router.push("Connexion")
           }
         })
@@ -70,14 +83,6 @@ export default {
         this.booleanPassword = true
       }
     }
-  },
-  alreadyRegistered() {
-    fetch("/user/alreadyRegistered",
-        {
-          method: 'POST',
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({username: this.username})
-        }).then( res => { return res })
   }
 }
 </script>
