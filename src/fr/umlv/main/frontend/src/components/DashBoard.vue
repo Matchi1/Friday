@@ -1,5 +1,47 @@
 <template>
-  <h1>{{ msg }}</h1>
+  <div>
+  <!-- Next rdv -->
+    <div class="max-w-screen-lg bg-purple-500 shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
+      <h2 class="text-3xl leading-9 font-bold tracking-tight text-white sm:text-4xl sm:leading-10">
+        Jsp
+      </h2>
+      <div class="mt-8 flex justify-center">
+        <div class="inline-flex rounded-md bg-white shadow">
+          <a class="text-gray-700 font-bold py-2 px-6">
+            Prochain rdv + info intelligente
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liste rdv -->
+    <div class="max-w-screen-lg bg-indigo-500 shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
+      <h2 class="text-3xl leading-9 font-bold tracking-tight text-white sm:text-4xl sm:leading-10">
+        Jsp
+      </h2>
+      <div class="mt-8 flex justify-center">
+        <div class="inline-flex rounded-md bg-white shadow">
+          <a class="text-gray-700 font-bold py-2 px-6">
+            Liste de rdv de la journee par ordre chrono
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="max-w-screen-lg bg-white shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
+      <h2 class="text-3xl leading-9 font-bold tracking-tight text-gray-800 sm:text-4xl sm:leading-10">
+        Jsp
+      </h2>
+      <div class="mt-8 flex justify-center">
+        <div class="inline-flex rounded-md bg-blue-500 shadow">
+          <a class="text-gray-200 font-bold py-2 px-6">
+            <router-link to="/fullcalendar">Calendrier du mois</router-link>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -10,6 +52,7 @@ export default {
       msg: ''
     }
   },
+  /*
   mounted() {
     fetch("/event/all")
         .then((response) => response.text())
@@ -17,5 +60,7 @@ export default {
           this.msg = data;
         });
   }
+
+   */
 }
 </script>
