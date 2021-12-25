@@ -1,7 +1,11 @@
 package fr.umlv.main.back.user;
 
 import fr.umlv.main.back.crypt.CryptPassword;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -91,6 +95,27 @@ public class UserService {
     public ResponseEntity<UserResponseDTO> getUserById(UUID id) {
         Objects.requireNonNull(id);
         var userContainer = userRepository.findById(id);
+        if (userContainer.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var user = userContainer.get();
+        return ResponseEntity.ok(new UserResponseDTO(user.getId(), user.getUsername()));
+    }
+
+    /**
+     * Retrieve a user with the specified username
+     *
+     * @param username the specified username
+     *
+     * @return a 200 http response containing the retrieved user
+     * 		   else a 404 http response
+     */
+    public ResponseEntity<UserResponseDTO> getUserByUsername(String username) {
+        Objects.requireNonNull(username);
+        var exampleMatcher = ExampleMatcher.matching()
+                .withIgnorePaths("id", "events", "password");
+        var example = Example.of(new User(username, ""), exampleMatcher);
+        var userContainer = userRepository.findOne(example);
         if (userContainer.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

@@ -48,18 +48,16 @@ public class UserController {
 	/**
 	 * Retrieve an user from the database with the specified id
 	 *
-	 * @param id the specified id
+	 * @param username the specified id
 	 *
 	 * @throws NullPointerException if the specified id is null
 	 * @return a response entity containing the corresponding user
 	 */
-    @GetMapping("/user/get/{id}")
-    public ResponseEntity<UserResponseDTO> getAll(
-            @PathVariable UUID id,
-            @RequestBody UserCredentialDTO user) {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(user);
-        return userService.getUserById(id);
+    @GetMapping("/user/get/{username}")
+    public ResponseEntity<UserResponseDTO> get(@PathVariable String username) {
+		Objects.requireNonNull(username);
+		System.out.println(username);
+        return userService.getUserByUsername(username);
     }
 
 	/**
@@ -68,8 +66,7 @@ public class UserController {
 	 * @return a response entity containing all the user
 	 */
     @GetMapping("/user/all")
-    public ResponseEntity<List<UserResponseDTO>> getAll(@RequestBody UserCredentialDTO user) {
-        Objects.requireNonNull(user);
+    public ResponseEntity<List<UserResponseDTO>> getAll() {
         return userService.getAllUsers();
     }
 }
