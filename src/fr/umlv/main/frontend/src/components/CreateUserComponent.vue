@@ -58,11 +58,8 @@ export default {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({username: this.username})
-          }).then( function (res) {
-        if (res.status === 201) {
-          this.booleanUsername = true
-        }
-      })
+          }).then( res => {this.booleanUsername = res.status === 201} )
+      return this.booleanUsername
     },
 
     register() {
@@ -74,8 +71,7 @@ export default {
               body: JSON.stringify({username: this.username, password: this.password})
             }
         ).then(function (res) {
-          this.alreadyRegistered()
-          if (res.status === 201 && !this.booleanUsername) {
+          if (res.status === 201 && !this.alreadyRegistered()) {
             router.push("Connexion")
           }
         })
