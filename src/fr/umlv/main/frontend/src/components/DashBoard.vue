@@ -15,7 +15,7 @@
     </div>
 
     <!-- Liste rdv -->
-    <div class="flex-content max-w-screen-lg bg-indigo-500 shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
+    <div class="flex-content max-w-screen-lg bg-purple-500 shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
       <h2 class="text-3xl leading-9 font-bold tracking-tight text-white sm:text-4xl sm:leading-10">
         Jsp
       </h2>
@@ -29,8 +29,8 @@
     </div>
 
     <!-- Calendar -->
-    <div class="flex-content max-w-screen-lg bg-white shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
-      <h2 class="text-3xl leading-9 font-bold tracking-tight text-gray-800 sm:text-4xl sm:leading-10">
+    <div class="flex-content max-w-screen-lg bg-purple-500 shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
+      <h2 class="text-3xl leading-9 font-bold tracking-tight text-white sm:text-4xl sm:leading-10">
         Jsp
       </h2>
       <div class="mt-8 flex justify-center">
