@@ -60,9 +60,7 @@ export default {
             headers: {"Content-Type": "application/json"},
           }).then((res => {
         this.booleanUsername = res.status === 200
-        console.log(this.booleanUsername)
       }))
-
     },
 
 
