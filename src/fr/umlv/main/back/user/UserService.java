@@ -1,19 +1,20 @@
 package fr.umlv.main.back.user;
 
 import fr.umlv.main.back.crypt.CryptPassword;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * This class provides services for user table access such as adding a new
- * user, removing an user and updating an user.
+ * user, removing a user and updating a user.
  */
 @Service
 public class UserService {
@@ -21,13 +22,13 @@ public class UserService {
     private UserRepo userRepository;
 
 	/**
-	 * Add an user to the DB using the specified user details
+	 * Add a user to the DB using the specified user details
 	 *
 	 * @param username the specified username
 	 * @param password the specified password
 	 *
 	 * @throws NullPointerException if one of the specified details is null
-	 * @return an entity response containing the added user information 
+	 * @return 200 (ok) http response with the added user
 	 */
     public ResponseEntity<UserResponseDTO> addUser(String username, String password) {
 		Objects.requireNonNull(username);
@@ -35,73 +36,103 @@ public class UserService {
         var user = new User(username, crypt.hash(password));
         var createdUser =  userRepository.save(user);
         return ResponseEntity
-                .created(URI.create("/users/save/" + createdUser.getId()))
-                .body(new UserResponseDTO(createdUser.getId(), createdUser.getUsername()));
+                .created(URI.create("/users/save/" + createdUser.getUsername()))
+                .body(new UserResponseDTO(createdUser.getUsername()));
     }
 
 	/**
-	 * Remove an user from the DB with the specified id
+	 * Remove a user from the DB with the specified username
 	 *
-	 * @param id the specified id
+	 * @param username the specified username
 	 *
-	 * @throws NullPointerException if the specified id is null
-	 * @return an 200 http response if the user was found
-	 * 		   else 404
+	 * @throws NullPointerException if the specified username is null
+	 * @return 200 (ok) http response if the user was found
+	 * 		   404 (not found) http response otherwise
 	 */
-    public ResponseEntity<UserResponseDTO> removeUser(UUID id) {
-        Objects.requireNonNull(id);
-        if (userRepository.findById(id).isEmpty()) {
+    public ResponseEntity<UserResponseDTO> removeUser(String username) {
+        Objects.requireNonNull(username);
+        if (userRepository.findById(username).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        userRepository.deleteById(id);
+        userRepository.deleteById(username);
         return ResponseEntity.ok().build();
     }
 
 	/**
-	 * Update the password of a user with the specified id
+	 * Update the password of a user with the specified username
 	 *
-	 * @param id the specified id
+	 * @param username the specified username
 	 * @param newPassword the new password
 	 *
 	 * @throws NullPointerException if the specified details is null
 	 *
-	 * @return 201 (created) http response if the password of the user has been
-	 * changed else 404 (not found)
+	 * @return 201 (created) http response if the password of the user has been changed,
+     *         404 (not found) http response otherwise
 	 */
-    public ResponseEntity<UserResponseDTO> updatePassword(UUID id , String newPassword) {
+    public ResponseEntity<UserResponseDTO> updatePassword(String username , String newPassword) {
         var crypt = new CryptPassword();
-        var user = userRepository.findById(id);
+        var user = userRepository.findById(username);
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         user.get().setPassword(crypt.hash(newPassword));
         var updatedUser = userRepository.save(user.get());
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .location(URI.create("/user/update/" + updatedUser.getId()))
-                .body(new UserResponseDTO(updatedUser.getId(), updatedUser.getUsername()));
+        return ResponseEntity
+                .created(URI.create("/user/update/" + updatedUser.getUsername()))
+                .body(new UserResponseDTO(updatedUser.getUsername()));
     }
 
-	/**
-	 * Retrieve an user with the specified id
-	 *
-	 * @param id the specified id
-	 *
-	 * @return a 200 http response containing the retrieved user
-	 * 		   else a 404 http response
-	 */
-    public ResponseEntity<UserResponseDTO> getUserById(UUID id) {
-        Objects.requireNonNull(id);
-        var userContainer = userRepository.findById(id);
+    /**
+     * Retrieve a user with the specified username
+     *
+     * @param username the specified username
+     *
+     * @return 200 (ok) http response containing the retrieved user,
+     * 		   404 (not found) http response otherwise
+     */
+    public ResponseEntity<UserResponseDTO> existById(String username) {
+        Objects.requireNonNull(username);
+        if (userRepository.existsById(username)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    /**
+     * Verify if a user input a correct credentials for the application login
+     *
+     * @param credentials the input credentials
+     *
+     * @throws NullPointerException if the input credentials is null
+     * @return 200 (ok) http response containing a user info if the credentials are correct,
+     * 		   404 (not found) http response otherwise
+     */
+    public ResponseEntity<UserResponseDTO> correctCredentials(UserSaveDTO credentials) {
+        Objects.requireNonNull(credentials);
+        var encryptor = new CryptPassword();
+        var hashedPassword = encryptor.hash(credentials.password());
+        var example = Example.of(new User(credentials.username(), hashedPassword), ExampleMatcher.matchingAll());
+        var userContainer = userRepository.findOne(example);
         if (userContainer.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         var user = userContainer.get();
-        return ResponseEntity.ok(new UserResponseDTO(user.getId(), user.getUsername()));
+        return ResponseEntity.ok(new UserResponseDTO(user.getUsername()));
     }
 
+    /**
+     * Retrieve all users from the database
+     *
+     * @return 404 (not found) http response if no users was found,
+     *         200 (ok) http response with all users otherwise
+     */
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        var users = userRepository.findAll().stream()
-                .map(user -> new UserResponseDTO(user.getId(), user.getUsername()))
+        var usersContainer = userRepository.findAll();
+        if(usersContainer.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var users = usersContainer.stream()
+                .map(user -> new UserResponseDTO(user.getUsername()))
                 .toList();
         return ResponseEntity.ok(users);
     }

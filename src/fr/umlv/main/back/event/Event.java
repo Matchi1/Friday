@@ -1,6 +1,7 @@
 package fr.umlv.main.back.event;
 
 import fr.umlv.main.DateDetails;
+import fr.umlv.main.back.formatter.EventFormatter;
 import fr.umlv.main.back.user.User;
 
 import javax.persistence.*;
@@ -175,11 +176,7 @@ public class Event {
 
     @Override
     public String toString() {
-        var messages = new StringJoiner(",\n", "Event {\n", "}");
-        messages.add("id=" + id);
-        messages.add("starting date=" + dateStart.toString());
-        messages.add("ending date=" + dateEnd.toString());
-        messages.add("informations=" + info);
-        return messages.toString();
+        var formatter = new EventFormatter();
+        return formatter.format(this);
     }
 }
