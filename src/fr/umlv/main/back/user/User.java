@@ -13,10 +13,7 @@ import java.util.UUID;
 @Entity(name = "USER_DB")
 public class User {
     @Id
-    @GeneratedValue
-    private UUID id;
-
-    @Column(nullable = false)
+	@Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
@@ -51,15 +48,6 @@ public class User {
 	 */
     public void setPassword(String password) {
         this.password = Objects.requireNonNull(password);
-    }
-
-	/**
-	 * Retrieve the id of the user
-	 *
-	 * @return the id of the user
-	 */
-    public UUID getId() {
-        return id;
     }
 
 	/**

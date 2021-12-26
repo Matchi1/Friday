@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * This class provide basic features for communication between the database and
@@ -23,7 +22,7 @@ public class UserController {
 	 * @param user the specified user info
 	 *
 	 * @throws NullPointerException if the specified user info is null
-	 * @return a response entity with the added user
+	 * @return 200 (ok) http response with the added user
 	 */
     @PostMapping("/user/save")
     public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserSaveDTO user) {
@@ -32,38 +31,54 @@ public class UserController {
     }
 
 	/**
-	 * Remove an user from the database according the specified user info
+	 * Remove a user from the database according the specified id
 	 *
-	 * @param user the specified user info
+	 * @param id the specified id
 	 * 
-	 * @throws NullPointerException if the specified user info is null
-	 * @return a response entity with the removed user
+	 * @throws NullPointerException if the specified id is null
+	 * @return 200 (ok) http response if the user was found
+	 * 	 	   404 (not found) http response otherwise
 	 */
-    @DeleteMapping("/user/delete")
-    public ResponseEntity<UserResponseDTO> removeUser(@RequestBody UserCredentialDTO user) {
-        Objects.requireNonNull(user);
-        return userService.removeUser(user.id());
+    @DeleteMapping("/user/delete/{id}")
+    public ResponseEntity<UserResponseDTO> removeUser(@PathVariable String id) {
+        return userService.removeUser(id);
     }
 
 	/**
-	 * Retrieve an user from the database with the specified id
+	 * Retrieve a user from the database with the specified id
 	 *
-	 * @param username the specified id
+	 * @param id the specified id
 	 *
 	 * @throws NullPointerException if the specified id is null
-	 * @return a response entity containing the corresponding user
+	 * @return 200 (ok) http response containing the retrieved user,
+	 *         404 (not found) http response otherwise
 	 */
-    @GetMapping("/user/get/{username}")
-    public ResponseEntity<UserResponseDTO> get(@PathVariable String username) {
-		Objects.requireNonNull(username);
-		System.out.println(username);
-        return userService.getUserByUsername(username);
+    @GetMapping("/user/exist/{id}")
+    public ResponseEntity<UserResponseDTO> existId(@PathVariable String id) {
+		Objects.requireNonNull(id);
+        return userService.existById(id);
     }
 
 	/**
-	 * Retrieve all the user from the database
+	 * Verify if a user input a correct credentials for the application login
 	 *
-	 * @return a response entity containing all the user
+	 * @param credentials the input credentials
+	 *
+	 * @throws NullPointerException if the input credentials is null
+	 * @return 200 (ok) http response containing a user info if the credentials are correct,
+	 * 		   404 (not found) http response otherwise
+	 */
+	@PostMapping("/user/exist")
+	public ResponseEntity<UserResponseDTO> correctCredentials(@RequestBody UserSaveDTO credentials) {
+		Objects.requireNonNull(credentials);
+		return userService.correctCredentials(credentials);
+	}
+
+	/**
+	 * Retrieve all users from the database
+	 *
+	 * @return 404 (not found) http response if no users was found,
+	 *   	   200 (ok) http response with all users otherwise
 	 */
     @GetMapping("/user/all")
     public ResponseEntity<List<UserResponseDTO>> getAll() {

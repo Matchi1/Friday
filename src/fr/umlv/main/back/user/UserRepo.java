@@ -9,5 +9,5 @@ import java.util.UUID;
  * the software layer.
  */
 @Repository
-public interface UserRepo extends JpaRepository<User, UUID> {
+public interface UserRepo extends JpaRepository<User, String> {
 }

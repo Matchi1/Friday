@@ -1,10 +1,8 @@
 package fr.umlv.main.back.user;
 
-import java.util.UUID;
-
 /**
- * This class contains all the necessary information about an user that the
+ * This class contains all the necessary information about a user that the
  * user needs to know.
  */
-public record UserResponseDTO(UUID id, String username) {
+public record UserResponseDTO(String username) {
 }
