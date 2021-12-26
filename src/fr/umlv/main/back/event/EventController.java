@@ -23,9 +23,10 @@ public class EventController {
 	 * @param event the specified event info
 	 *
 	 * @throws NullPointerException if the specified event info is null
-	 * @return a response entity with the added event
+	 * @return 409 (conflict) http response if there is the same event in the db
+	 * 		   201 (created) http response otherwise
 	 */
-    @PostMapping("/event/add")
+    @PostMapping("/event/save")
     public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) {
         Objects.requireNonNull(event);
         return eventService.addEvent(event);
@@ -37,18 +38,20 @@ public class EventController {
 	 * @param event the specified event info
 	 * 
 	 * @throws NullPointerException if the specified event info is null
-	 * @return a response entity with the removed event
+	 * @return 200 (ok) http response if the corresponding event was deleted
+	 * 		   404 (not found) http response otherwise
 	 */
     @DeleteMapping("/event/delete")
     public ResponseEntity<EventResponseDTO> removeEvent(@RequestBody EventCredentialDTO event) {
         Objects.requireNonNull(event);
-        return eventService.removeEvent(event.id(), event.user());
+        return eventService.removeEvent(event.id());
     }
 
 	/**
 	 * Retrieve all the event from the database
 	 *
-	 * @return a response entity containing all the events
+	 * @return 200 (ok) http response containing a list of all the events,
+	 * 		   404 (not found) http response otherwise
 	 */
     @GetMapping("/event/all")
     public ResponseEntity<List<EventResponseDTO>> getEvents() {
@@ -61,7 +64,8 @@ public class EventController {
 	 * @param id the specified event id
 	 * 
 	 * @throws NullPointerException if the specified event id is null
-	 * @return a response entity with the removed event
+	 * @return 200 (ok) http response if the event was found
+	 * 		   404 (not found) http response otherwise
 	 */
     @DeleteMapping("/event/delete/{id}")
     public ResponseEntity<EventResponseDTO> removeEventById(@PathVariable UUID id) {
@@ -77,7 +81,7 @@ public class EventController {
 	 * @param event the specified event info
 	 *
 	 * @throws NullPointerException if the specified id or event info is null
-	 * @return a response entity containing the updated event
+	 * @return 202 http response if the event was updated
 	 */
     @PutMapping("/event/update/{id}")
     public ResponseEntity<EventResponseDTO> updateEvent(
@@ -94,7 +98,8 @@ public class EventController {
 	 * @param id the specified id
 	 *
 	 * @throws NullPointerException if the specified id is null
-	 * @return a response entity containing the corresponding event
+	 * @return 200 (ok) http response containing the retrieved event
+	 * 		   404 (not found) http response otherwise
 	 */
     @GetMapping("/event/get/{id}")
     public ResponseEntity<EventResponseDTO> getEvent(@PathVariable UUID id) {
