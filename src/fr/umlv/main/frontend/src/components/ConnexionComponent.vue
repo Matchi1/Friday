@@ -42,8 +42,8 @@ export default {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({username: this.username, password: this.password})
           }).then(function (res) {
-          if (res.status === 201) {
-            //TODO les sessions lorsqu'on se connecte
+          if (res.status === 200) {
+
             router.push("/dashboard")
           }
       })
