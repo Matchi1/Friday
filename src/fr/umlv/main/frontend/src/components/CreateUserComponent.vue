@@ -52,16 +52,17 @@ export default {
   }),
 
   methods: {
+    /*
     alreadyRegistered() {
-      fetch("/user/alreadyRegistered",
+      fetch("/user/exist/" + this.username,
           {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({username: this.username})
-          }).then( res => {this.booleanUsername = res.status === 201} )
+          }).then( res => {this.booleanUsername = res.status === 200} )
       return this.booleanUsername
     },
-
+*/
     register() {
       if (this.password === this.confirm) {
         fetch("/user/save",
@@ -71,9 +72,10 @@ export default {
               body: JSON.stringify({username: this.username, password: this.password})
             }
         ).then(function (res) {
-          if (res.status === 201 && !this.alreadyRegistered()) {
+          if (res.status === 201 /*&& !this.alreadyRegistered()*/) {
             router.push("Connexion")
           }
+          console.log(res)
         })
       } else {
         this.booleanPassword = true
