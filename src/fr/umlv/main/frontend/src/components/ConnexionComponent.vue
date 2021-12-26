@@ -36,14 +36,14 @@ export default {
 
   methods: {
     connexion() {
-      fetch("/user/connexion",
+      fetch("/user/exist",
           {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({username: this.username, password: this.password})
           }).then(function (res) {
           if (res.status === 201) {
-            //Faire des sessions avec username
+            //TODO les sessions lorsqu'on se connecte
             router.push("/dashboard")
           }
       })

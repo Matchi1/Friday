@@ -25,7 +25,7 @@
         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="confirm" type="password" placeholder="Confirm your password"  v-model="confirm" required>
       </div>
     <div class="flex items-center justify-between">
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline" type="button" @click="register(); alreadyRegistered();">
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline" type="button" @click="register();">
         Register
       </button>
       <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
@@ -53,29 +53,33 @@ export default {
 
   methods: {
 
-    alreadyRegistered() {
-      fetch("/user/exist/" + this.username,
+    async alreadyRegistered() {
+      await fetch("/user/exist/" + this.username,
           {
             method: 'GET',
             headers: {"Content-Type": "application/json"},
-          }).then(( res => {
-            this.booleanUsername = res.status === 200} ))
+          }).then((res => {
+        this.booleanUsername = res.status === 200
+        console.log(this.booleanUsername)
+      }))
+
     },
 
 
-    register() {
+    async register() {
+      this.booleanUsername = false
       if (this.password === this.confirm) {
-        fetch("/user/save",
+        await this.alreadyRegistered()
+        const resp = await fetch("/user/save",
             {
               method: 'POST',
               headers: {"Content-Type": "application/json"},
               body: JSON.stringify({username: this.username, password: this.password})
             }
-        ).then(res => {
-          if (res.status === 201 && !this.booleanUsername) {
-              router.push("Connexion")
-          }
-        })
+        )
+        if (resp.status === 201 && !this.booleanUsername) {
+          await router.push("Connexion")
+        }
       } else {
         this.booleanPassword = true
       }
