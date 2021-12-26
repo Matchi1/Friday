@@ -32,12 +32,9 @@ public class EventService {
 	 * 		   else false
 	 */
     private boolean containsEvent(EventSaveDTO eventDetails) {
-        var exempleMatcher = ExampleMatcher.matchingAll()
-                .withMatcher("id", ExampleMatcher.GenericPropertyMatchers.ignoreCase())
-                .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.ignoreCase())
-                .withMatcher("information", ExampleMatcher.GenericPropertyMatchers.ignoreCase())
-                .withMatcher("user", ExampleMatcher.GenericPropertyMatchers.ignoreCase());
-        var example = Example.of(Event.createEvent(eventDetails), exempleMatcher);
+        var exampleMatcher = ExampleMatcher.matchingAll()
+				.withIgnorePaths("id", "title", "info", "user");
+        var example = Example.of(Event.createEvent(eventDetails), exampleMatcher);
         var event = eventRepository.findOne(example);
         return event.isPresent();
     }
@@ -48,7 +45,8 @@ public class EventService {
 	 * @param eventDetails the specified event details
 	 *
 	 * @throws NullPointerException if the specified details is null
-	 * @return an entity response containing the added event information 
+	 * @return 409 (conflict) http response if there is the same event in the db
+	 * 		   201 (created) http response otherwise
 	 */
     public ResponseEntity<EventResponseDTO> addEvent(EventSaveDTO eventDetails) {
         Objects.requireNonNull(eventDetails);
@@ -67,11 +65,11 @@ public class EventService {
 	 * details
 	 *
 	 * @param id the specified id
-	 * @param eventDetails the specified event details
+	 * @param eventSave the specified event details
 	 *
 	 * @throws NullPointerException if the specified details is null
 	 * @throws EntityNotFoundException if the event with the specified id was not found 
-	 * @return an entity response containing the updated event information 
+	 * @return 202 http response if the event was updated
 	 */
     public ResponseEntity<EventResponseDTO> updateEvent(UUID id, EventSaveDTO eventSave) {
         var event = eventRepository.findById(id)
@@ -91,9 +89,10 @@ public class EventService {
 	 * @param id the specified id
 	 *
 	 * @throws NullPointerException if the specified details is null
-	 * @return an 200 http response
+	 * @return 200 (ok) http response if the corresponding event was deleted
+	 * 		   404 (not found) http response otherwise
 	 */
-    public ResponseEntity<EventResponseDTO> removeEvent(UUID id, User userId) {
+    public ResponseEntity<EventResponseDTO> removeEvent(UUID id) {
         var event = eventRepository.findById(id);
         if (event.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -108,8 +107,8 @@ public class EventService {
 	 * @param id the specified id
 	 *
 	 * @throws NullPointerException if the specified details is null
-	 * @return an 200 http response if the event was found
-	 * 		   else an 404 http response
+	 * @return 200 (ok) http response if the event was found
+	 * 		   404 (not found) http response otherwise
 	 */
     public ResponseEntity<EventResponseDTO> removeEventById(UUID id) {
         var event = eventRepository.findById(id);
@@ -123,10 +122,14 @@ public class EventService {
 	/**
 	 * Retrieve all the events from the DB
 	 *
-	 * @return a 200 http response containing a list of all the events
+	 * @return 200 (ok) http response containing a list of all the events,
+	 * 		   404 (not found) http response otherwise
 	 */
     public ResponseEntity<List<EventResponseDTO>> getEvents() {
         var events = eventRepository.findAll();
+		if(events.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
         var response = events.stream()
                 .map(EventResponseDTO::new)
                 .toList();
@@ -138,8 +141,8 @@ public class EventService {
 	 *
 	 * @param id the specified id
 	 *
-	 * @return a 200 http response containing the retrieved event
-	 * 		   else a 404 http response
+	 * @return 200 (ok) http response containing the retrieved event
+	 * 		   404 (not found) http response otherwise
 	 */
     public ResponseEntity<EventResponseDTO> getEventById(UUID id) {
         var event = eventRepository.findById(id);
