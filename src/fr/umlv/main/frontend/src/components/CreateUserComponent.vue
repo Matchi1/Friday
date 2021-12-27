@@ -15,7 +15,7 @@
           Password
         </label>
         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="password" type="password" placeholder="Password" v-model="password">
-        <p class="text-gray-600 text-xs italic">Mettre une règle pour les mdp ici (peut-etre utf-8)</p>
+        <p class="text-gray-600 text-xs italic">Must use utf-8 character</p>
       </div>
     </div>
       <div class="mb-9">
@@ -32,8 +32,8 @@
         <router-link to="/connexion">Already have an account</router-link>
       </a>
     </div>
-    <div v-if="booleanPassword" class="pt-1.5 text-red-500">Mot de passe différent</div>
-    <div v-if="booleanUsername" class="pt-1.5 text-red-500">Cet Username existe déjà</div>
+    <div v-if="booleanPassword" class="pt-1.5 text-red-500">Not matching password</div>
+    <div v-if="booleanUsername" class="pt-1.5 text-red-500">Username already taken</div>
   </form>
 </template>
 
