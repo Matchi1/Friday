@@ -11,13 +11,14 @@
         <p class="text-red-500 text-xs italic">Please choose a password.</p>
       </div>
       <div class="flex items-center justify-between">
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline" type="button">
-          <router-link to="/fullcalendar">Sign In</router-link>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline" type="button" @click="connexion(); getUsername();">
+          Sign In
         </button>
         <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
           <router-link to="/createUser">New user ?</router-link>
         </a>
       </div>
+      <div v-if="wrongUser" class="pt-1.5 text-red-500">Username or password not matching</div>
     </form>
   </div>
 </template>
@@ -31,7 +32,8 @@ export default {
 
   data: () => ({
     username: "",
-    password: ""
+    password: "",
+    wrongUser: false,
   }),
 
   methods: {
@@ -43,13 +45,16 @@ export default {
             body: JSON.stringify({username: this.username, password: this.password})
           }).then(function (res) {
           if (res.status === 200) {
-
             router.push("/dashboard")
           }
       })
+      this.wrongUser = true
+    },
+    getUsername() {
+      const username = JSON.stringify(this.username);
+      localStorage.setItem('user', username)
     }
   }
-
 }
 
 </script>
