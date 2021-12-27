@@ -22,9 +22,6 @@
       <div class="mt-8 flex justify-center">
         <div class="inline-flex rounded-md bg-white shadow">
           <a class="text-gray-700 font-bold py-2 px-6">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline" type="button" @click="calendar">
-              Register
-            </button>
             Liste de rdv de la journee par ordre chrono
           </a>
         </div>
@@ -50,7 +47,6 @@
 <script>
 export default {
   name: 'DashBoard',
-  inject:['globalUsername'],
 
   data() {
     return {
