@@ -1,4 +1,4 @@
-package fr.umlv.main.back.event;
+package fr.umlv.back.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

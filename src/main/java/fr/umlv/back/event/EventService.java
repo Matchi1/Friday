@@ -1,6 +1,5 @@
-package fr.umlv.main.back.event;
+package fr.umlv.back.event;
 
-import fr.umlv.main.back.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;

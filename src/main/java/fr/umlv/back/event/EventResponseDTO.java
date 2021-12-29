@@ -1,4 +1,4 @@
-package fr.umlv.main.back.event;
+package fr.umlv.back.event;
 
 import java.util.Date;
 import java.util.UUID;

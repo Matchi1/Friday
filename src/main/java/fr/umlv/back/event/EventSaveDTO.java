@@ -1,5 +1,5 @@
-package fr.umlv.main.back.event;
-import fr.umlv.main.DateDetails;
+package fr.umlv.back.event;
+import fr.umlv.back.DateDetails;
 
 import java.util.Objects;
 

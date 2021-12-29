@@ -1,4 +1,4 @@
-package fr.umlv.main.back.event;
+package fr.umlv.back.event;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

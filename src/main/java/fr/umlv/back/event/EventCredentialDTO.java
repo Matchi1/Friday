@@ -1,6 +1,6 @@
-package fr.umlv.main.back.event;
+package fr.umlv.back.event;
 
-import fr.umlv.main.back.user.User;
+import fr.umlv.back.user.User;
 
 import java.util.UUID;
 

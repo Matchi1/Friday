@@ -1,8 +1,8 @@
-package fr.umlv.main.back.event;
+package fr.umlv.back.event;
 
-import fr.umlv.main.DateDetails;
-import fr.umlv.main.back.formatter.EventFormatter;
-import fr.umlv.main.back.user.User;
+import fr.umlv.back.DateDetails;
+import fr.umlv.back.formatter.EventFormatter;
+import fr.umlv.back.user.User;
 
 import javax.persistence.*;
 import java.util.*;
