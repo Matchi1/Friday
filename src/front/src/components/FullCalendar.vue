@@ -4,7 +4,7 @@
 
 <script>
 import '@fullcalendar/core/vdom' // solves problem with Vite
-import FullCalendar from '@fullcalendar/vue'
+import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
