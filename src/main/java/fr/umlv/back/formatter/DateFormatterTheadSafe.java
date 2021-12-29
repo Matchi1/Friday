@@ -1,4 +1,4 @@
-package fr.umlv.main.back.formatter;
+package fr.umlv.back.formatter;
 
 import java.text.DateFormat;
 import java.text.ParseException;

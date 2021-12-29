@@ -1,6 +1,6 @@
-package fr.umlv.main.back.formatter;
+package fr.umlv.back.formatter;
 
-import fr.umlv.main.back.event.Event;
+import fr.umlv.back.event.Event;
 
 import java.util.StringJoiner;
 
