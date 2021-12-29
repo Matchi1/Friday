@@ -117,4 +117,15 @@ public class EventController {
 	public ResponseEntity<List<EventResponseDTO>> getEventOfTheDay() {
 		return eventService.getEventOfTheDay();
 	}
+
+	/**
+	 * Retrieve most recent event until now
+	 *
+	 * @return 200 (ok) http response containing the most recent event
+	 * 		   404 (not found) http response otherwise
+	 */
+	@GetMapping("/event/get/recent")
+	public ResponseEntity<EventResponseDTO> getMostRecentEvent() {
+		return eventService.getMostRecentEvent();
+	}
 }

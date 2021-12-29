@@ -176,4 +176,27 @@ public class EventService {
 		}
 		return ResponseEntity.ok(eventsOfTheDay);
 	}
+
+	/**
+	 * Retrieve most recent event until now
+	 *
+	 * @return 200 (ok) http response containing the most recent event
+	 * 		   404 (not found) http response otherwise
+	 */
+	public ResponseEntity<EventResponseDTO> getMostRecentEvent() {
+		var current = Calendar.getInstance().getTime();
+		var events = eventRepository.findAll();
+		var recent = events.stream().min((event1, event2) -> {
+			if (current.compareTo(event1.getDateStart()) < current.compareTo(event2.getDateStart())) {
+				return 1;
+			} else if (current.compareTo(event1.getDateStart()) == current.compareTo(event2.getDateStart())) {
+				return 0;
+			}
+			return -1;
+		});
+		if (recent.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(new EventResponseDTO(recent.get()));
+	}
 }
