@@ -1,4 +1,4 @@
-package fr.umlv.main.back.crypt;
+package fr.umlv.back.crypt;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
