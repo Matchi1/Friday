@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import javax.persistence.EntityNotFoundException;
 import java.net.URI;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -150,4 +151,29 @@ public class EventService {
         }
         return ResponseEntity.notFound().build();
     }
+
+	/**
+	 * Retrieve all the events of the day
+	 *
+	 * @return 200 (ok) http response containing all the events of the day
+	 * 		   404 (not found) http response otherwise
+	 */
+	public ResponseEntity<List<EventResponseDTO>> getEventOfTheDay() {
+		var calendar = Calendar.getInstance();
+		var events = eventRepository.findAll();
+		var diff = calendar.getActualMaximum(Calendar.HOUR_OF_DAY) - calendar.get(Calendar.HOUR_OF_DAY);
+		var current = calendar.getTime();
+		calendar.add(Calendar.HOUR, diff);
+		var limit = calendar.getTime();
+		var eventsOfTheDay = events.stream().filter(event -> {
+			System.out.println(current);
+			System.out.println(limit);
+			System.out.println(event.getDateStart());
+			return (event.getDateStart().after(current) && event.getDateStart().before(limit));
+		}).map(EventResponseDTO::new).toList();
+		if (eventsOfTheDay.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(eventsOfTheDay);
+	}
 }

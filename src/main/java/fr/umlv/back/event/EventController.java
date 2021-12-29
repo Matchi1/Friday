@@ -106,4 +106,15 @@ public class EventController {
         Objects.requireNonNull(id);
         return eventService.getEventById(id);
     }
+
+	/**
+	 * Retrieve all the events of the day
+	 *
+	 * @return 200 (ok) http response containing all the events of the day
+	 * 		   404 (not found) http response otherwise
+	 */
+	@GetMapping("/event/get/day")
+	public ResponseEntity<List<EventResponseDTO>> getEventOfTheDay() {
+		return eventService.getEventOfTheDay();
+	}
 }
