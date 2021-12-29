@@ -1,7 +1,7 @@
-package fr.umlv.main.back.date;
+package fr.umlv.back.date;
 
-import fr.umlv.main.DateDetails;
-import fr.umlv.main.back.formatter.DateFormatterTheadSafe;
+import fr.umlv.back.DateDetails;
+import fr.umlv.back.formatter.DateFormatterTheadSafe;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -1,11 +1,8 @@
-package fr.umlv.main.back.event;
+package fr.umlv.back.event;
 
-import fr.umlv.main.DateDetails;
+import fr.umlv.back.DateDetails;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Calendar;
-import java.util.Date;
 
 public class EventTest {
     @Test

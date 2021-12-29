@@ -1,8 +1,9 @@
-package fr.umlv.main.back.event;
+package fr.umlv.back.event;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.umlv.main.DateDetails;
-import fr.umlv.main.ResourceNotFoundException;
+
+import fr.umlv.back.DateDetails;
+import fr.umlv.back.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

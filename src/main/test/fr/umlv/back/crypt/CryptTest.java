@@ -1,4 +1,4 @@
-package fr.umlv.main.back.crypt;
+package fr.umlv.back.crypt;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
