@@ -1,7 +1,6 @@
 package fr.umlv.back.event;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fr.umlv.back.DateDetails;
 import fr.umlv.back.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -93,7 +92,7 @@ public class EventWebTest {
 				.delete(URI.create("/event/delete"))
 				.contentType("application/json")
 				.content(objectMapper.writeValueAsString(eventDelete));
-		// remove event if it already in database
+		// remove event if it is already in database
 		mockMvc.perform(mockRequest)
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
