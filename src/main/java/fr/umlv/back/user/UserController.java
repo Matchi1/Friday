@@ -1,4 +1,4 @@
-package fr.umlv.main.back.user;
+package fr.umlv.back.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

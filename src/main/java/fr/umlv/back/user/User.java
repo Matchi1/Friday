@@ -1,11 +1,11 @@
-package fr.umlv.main.back.user;
+package fr.umlv.back.user;
 
-import fr.umlv.main.back.event.Event;
+
+import fr.umlv.back.event.Event;
 
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * This class is responsible of representing an user and its characteristic

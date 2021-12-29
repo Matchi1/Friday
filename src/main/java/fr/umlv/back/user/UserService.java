@@ -1,7 +1,6 @@
-package fr.umlv.main.back.user;
+package fr.umlv.back.user;
 
-import fr.umlv.main.back.crypt.CryptPassword;
-
+import fr.umlv.back.crypt.CryptPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;

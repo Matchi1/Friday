@@ -1,9 +1,5 @@
-package fr.umlv.main.back.user;
+package fr.umlv.back.user;
 
-import fr.umlv.main.back.crypt.CryptPassword;
-
-import javax.crypto.IllegalBlockSizeException;
-import java.security.InvalidKeyException;
 import java.util.Objects;
 
 /**

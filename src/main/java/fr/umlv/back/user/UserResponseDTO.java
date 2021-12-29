@@ -1,4 +1,4 @@
-package fr.umlv.main.back.user;
+package fr.umlv.back.user;
 
 /**
  * This class contains all the necessary information about a user that the
