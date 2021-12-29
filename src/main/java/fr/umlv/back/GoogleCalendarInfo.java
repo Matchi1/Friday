@@ -78,7 +78,7 @@ public class GoogleCalendarInfo {
         System.out.println(node.asText());
     }
 
-    public static void main(String... args) throws IOException, GeneralSecurityException {
+    public static void hello() throws GeneralSecurityException, IOException {
         // Build a new authorized API client service.
         final var HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         var service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
