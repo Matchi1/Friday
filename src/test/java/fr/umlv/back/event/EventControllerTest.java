@@ -1,7 +1,6 @@
 package fr.umlv.back.event;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.umlv.back.DateDetails;
 import fr.umlv.back.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,7 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.net.URI;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @WebMvcTest(EventController.class)
@@ -32,9 +31,10 @@ public class EventControllerTest {
 
     @Test
     void shouldRespond201WhenAddNewEvent() throws Exception {
-		var start = new DateDetails(2021, 11, 10, 23, 14);
+		var start = "2021/11/10 23:14";
 		var eventSave = new EventSaveDTO("", start, "add event test");
-		var response = new EventResponseDTO(UUID.randomUUID(), "", new Date(), new Date(), "");
+		var local = LocalDate.now();
+		var response = new EventResponseDTO(UUID.randomUUID(), "", local, local, "");
 		Mockito.when(eventService.addEvent(eventSave))
 				.thenReturn(new ResponseEntity<>(response, HttpStatus.CREATED));
         var mockRequest = MockMvcRequestBuilders
@@ -58,7 +58,7 @@ public class EventControllerTest {
 	@Test
 	void shouldThrowNotFoundExceptionWhenUpdateEventNotExist() throws Exception {
 		var id = UUID.randomUUID();
-		var start = new DateDetails(2021, 11, 10, 23, 14);
+		var start = "2021/11/10 23:14";
 		var eventSave = new EventSaveDTO("", start, "add event test");
 		Mockito.when(eventService.updateEvent(id, eventSave))
 				.thenThrow(new ResourceNotFoundException("Event not found"));
@@ -73,7 +73,7 @@ public class EventControllerTest {
 	@Test
 	void shouldSucceedWhenUpdateEvent() throws Exception {
 		var id = UUID.randomUUID();
-		var start = new DateDetails(2021, 11, 10, 23, 14);
+		var start = "2021/11/10 23:14";
 		var eventSave = new EventSaveDTO("", start,"add event test");
 		Mockito.when(eventService.updateEvent(id, eventSave))
 				.thenReturn(ResponseEntity.accepted().build());
