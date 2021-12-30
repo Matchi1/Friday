@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import javax.persistence.EntityNotFoundException;
 import java.net.URI;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -28,7 +31,7 @@ public class EventService {
 	 * @return true if an event is respecting the details
 	 * 		   else false
 	 */
-    private boolean containsEvent(EventSaveDTO eventDetails) {
+    private boolean containsEvent(EventSaveDTO eventDetails) throws ParseException {
         var exampleMatcher = ExampleMatcher.matchingAll()
 				.withIgnorePaths("id", "title", "info", "user");
         var example = Example.of(Event.createEvent(eventDetails), exampleMatcher);
@@ -45,7 +48,7 @@ public class EventService {
 	 * @return 409 (conflict) http response if there is the same event in the db
 	 * 		   201 (created) http response otherwise
 	 */
-    public ResponseEntity<EventResponseDTO> addEvent(EventSaveDTO eventDetails) {
+    public ResponseEntity<EventResponseDTO> addEvent(EventSaveDTO eventDetails) throws ParseException {
         Objects.requireNonNull(eventDetails);
         if(containsEvent(eventDetails)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -68,11 +71,11 @@ public class EventService {
 	 * @throws EntityNotFoundException if the event with the specified id was not found 
 	 * @return 202 http response if the event was updated
 	 */
-    public ResponseEntity<EventResponseDTO> updateEvent(UUID id, EventSaveDTO eventSave) {
+    public ResponseEntity<EventResponseDTO> updateEvent(UUID id, EventSaveDTO eventSave) throws ParseException {
         var event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found for this Id :: " + id));
-        event.setDateStart(eventSave.dateStart());
-        event.setDateEnd(eventSave.dateEnd());
+        event.setDateStart(eventSave.start());
+        event.setDateEnd(eventSave.start());
         event.setInfo(eventSave.info());
         final var updatedEvent = eventRepository.save(event);
         return ResponseEntity.status(HttpStatus.ACCEPTED)
@@ -138,14 +141,11 @@ public class EventService {
 	 * 		   404 (not found) http response otherwise
 	 */
 	public ResponseEntity<List<EventResponseDTO>> getEventOfTheDay(String username) {
-		var calendar = Calendar.getInstance();
 		var events = eventRepository.findAll();
-		var diff = calendar.getActualMaximum(Calendar.HOUR_OF_DAY) - calendar.get(Calendar.HOUR_OF_DAY);
-		var current = calendar.getTime();
-		calendar.add(Calendar.HOUR, diff);
-		var limit = calendar.getTime();
+		var current = LocalDate.now();
+		var end = current.atTime(LocalTime.MAX);
 		var eventsOfTheDay = events.stream().filter(event ->
-				(event.getDateStart().after(current) && event.getDateStart().before(limit)) && event.user().equals(username))
+				event.getDateStart().isAfter(current) && event.getDateStart().isBefore(end.toLocalDate()) && event.user().equals(username))
 				.map(EventResponseDTO::new)
 				.toList();
 		if (eventsOfTheDay.isEmpty()) {
@@ -164,7 +164,7 @@ public class EventService {
 	 * 		   -1 if the second event is the closest to the specified date time
 	 * 		   0 otherwise
 	 */
-	private int compareRecent(Date current, Event event1, Event event2) {
+	private int compareRecent(LocalDate current, Event event1, Event event2) {
 		if (current.compareTo(event1.getDateStart()) < current.compareTo(event2.getDateStart())) {
 			return 1;
 		} else if (current.compareTo(event1.getDateStart()) == current.compareTo(event2.getDateStart())) {
@@ -180,7 +180,7 @@ public class EventService {
 	 * 		   404 (not found) http response otherwise
 	 */
 	public ResponseEntity<EventResponseDTO> getMostRecentEvent(String username) {
-		var current = Calendar.getInstance().getTime();
+		var current = LocalDate.now();
 		var events = eventRepository.findAll();
 		var recent = events.stream()
 				.filter(event -> event.user().equals(username))

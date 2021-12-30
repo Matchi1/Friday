@@ -1,10 +1,12 @@
 package fr.umlv.back.event;
 
-import fr.umlv.back.DateDetails;
+import fr.umlv.back.formatter.DateFormatter;
 import fr.umlv.back.formatter.EventFormatter;
 import fr.umlv.back.user.User;
 
 import javax.persistence.*;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -21,10 +23,10 @@ public class Event {
     private String title;
 
     @Column(nullable = false)
-    private Date dateStart;
+    private LocalDate dateStart;
 
     @Column(nullable = false)
-    private Date dateEnd;
+    private LocalDate dateEnd;
 
     @Column(nullable = false)
     private String info;
@@ -52,23 +54,11 @@ public class Event {
 	 *
 	 * @throws NullPointerException if one of the specified argument is null
 	 */
-    private Event(String title, Date dateStart, Date dateEnd, String info) {
+    private Event(String title, LocalDate dateStart, LocalDate dateEnd, String info) {
         this.title = Objects.requireNonNull(title);
         this.dateStart = Objects.requireNonNull(dateStart);
         this.dateEnd = Objects.requireNonNull(dateEnd);
         this.info = Objects.requireNonNull(info);
-    }
-
-	/**
-	 * Create Date according to the specified date details
-	 *
-	 * @param details the specified date details
-	 */
-    private static Date createDateFromDateDetails(DateDetails details) {
-        var calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.set(details.year(), details.month(), details.day(), details.hour(), details.minute());
-        return calendar.getTime();
     }
 
 	/**
@@ -78,10 +68,11 @@ public class Event {
 	 *
 	 * @throws NullPointerException if the specified event details is null
 	 */
-    public static Event createEvent(EventSaveDTO eventDetails) {
+    public static Event createEvent(EventSaveDTO eventDetails) throws ParseException {
         Objects.requireNonNull(eventDetails);
-        var start = createDateFromDateDetails(eventDetails.dateStart());
-        var end = createDateFromDateDetails(eventDetails.dateEnd());
+        var formatter = new DateFormatter();
+        var start = formatter.formatFromStringToDate(eventDetails.start());
+        var end = formatter.formatFromStringToDate(eventDetails.end());
         return new Event(eventDetails.title(), start, end, eventDetails.info());
     }
 
@@ -108,7 +99,7 @@ public class Event {
 	 *
 	 * @return Return the starting date of the event
 	 */
-    public Date getDateStart() {
+    public LocalDate getDateStart() {
         return dateStart;
     }
 
@@ -117,7 +108,7 @@ public class Event {
 	 *
 	 * @return Return the ending date of the event
 	 */
-    public Date getDateEnd() {
+    public LocalDate getDateEnd() {
         return dateEnd;
     }
 
@@ -140,21 +131,23 @@ public class Event {
     }
 
 	/***
-	 * Set the starting date according to the specified date details
+	 * Set the starting date according to the specified starting date
 	 *
-	 * @param dateStartDetails the specified date details
+	 * @param start the specified starting details
 	 */
-    public void setDateStart(DateDetails dateStartDetails) {
-        this.dateStart = createDateFromDateDetails(dateStartDetails);
+    public void setDateStart(String start) throws ParseException {
+        var formatter = new DateFormatter();
+        this.dateStart = formatter.formatFromStringToDate(start);
     }
 
 	/**
-	 * Set the ending date according to the specified date details
+	 * Set the ending date according to the specified ending date
 	 *
-	 * @param dateEndDetails the specified date details
+	 * @param end the specified ending date
 	 */
-    public void setDateEnd(DateDetails dateEndDetails) {
-        this.dateEnd = createDateFromDateDetails(dateEndDetails);
+    public void setDateEnd(String end) throws ParseException {
+        var formatter = new DateFormatter();
+        this.dateStart = formatter.formatFromStringToDate(end);
     }
 
 	/**

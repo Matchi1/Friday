@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,7 +28,7 @@ public class EventController {
 	 * 		   201 (created) http response otherwise
 	 */
     @PostMapping("/event/save")
-    public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) {
+    public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) throws ParseException {
         Objects.requireNonNull(event);
         return eventService.addEvent(event);
     }
@@ -71,7 +72,7 @@ public class EventController {
     @PutMapping("/event/update/{id}")
     public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable UUID id,
-            @RequestBody EventSaveDTO event) {
+            @RequestBody EventSaveDTO event) throws ParseException {
         Objects.requireNonNull(event);
         Objects.requireNonNull(id);
         return eventService.updateEvent(id, event);
