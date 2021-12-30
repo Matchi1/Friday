@@ -86,24 +86,6 @@ public class EventService {
 	 * @param id the specified id
 	 *
 	 * @throws NullPointerException if the specified details is null
-	 * @return 200 (ok) http response if the corresponding event was deleted
-	 * 		   404 (not found) http response otherwise
-	 */
-    public ResponseEntity<EventResponseDTO> removeEvent(UUID id) {
-        var event = eventRepository.findById(id);
-        if (event.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        eventRepository.delete(event.get());
-        return ResponseEntity.ok().build();
-    }
-
-	/**
-	 * Remove an event from the DB with the specified id
-	 *
-	 * @param id the specified id
-	 *
-	 * @throws NullPointerException if the specified details is null
 	 * @return 200 (ok) http response if the event was found
 	 * 		   404 (not found) http response otherwise
 	 */

@@ -33,21 +33,6 @@ public class EventController {
     }
 
 	/**
-	 * Remove an event from the database according the specified event info
-	 *
-	 * @param event the specified event info
-	 * 
-	 * @throws NullPointerException if the specified event info is null
-	 * @return 200 (ok) http response if the corresponding event was deleted
-	 * 		   404 (not found) http response otherwise
-	 */
-    @DeleteMapping("/event/delete")
-    public ResponseEntity<EventResponseDTO> removeEvent(@RequestBody EventCredentialDTO event) {
-        Objects.requireNonNull(event);
-        return eventService.removeEvent(event.id());
-    }
-
-	/**
 	 * Retrieve all the event from the database
 	 *
 	 * @return 200 (ok) http response containing a list of all the events,
