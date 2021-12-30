@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * This class provides services for user table access such as adding a new
@@ -98,6 +99,20 @@ public class UserService {
     }
 
     /**
+     * Get user container according to the specified credentials
+     *
+     * @param credentials the specified credentials
+     * @return the user container
+     */
+    private Optional<User> getUser(UserSaveDTO credentials) {
+        Objects.requireNonNull(credentials);
+        var encryptor = new CryptPassword();
+        var hashedPassword = encryptor.hash(credentials.password());
+        var example = Example.of(new User(credentials.username(), hashedPassword), ExampleMatcher.matchingAll());
+        return userRepository.findOne(example);
+    }
+
+    /**
      * Verify if a user input a correct credentials for the application login
      *
      * @param credentials the input credentials
@@ -107,32 +122,11 @@ public class UserService {
      * 		   404 (not found) http response otherwise
      */
     public ResponseEntity<UserResponseDTO> correctCredentials(UserSaveDTO credentials) {
-        Objects.requireNonNull(credentials);
-        var encryptor = new CryptPassword();
-        var hashedPassword = encryptor.hash(credentials.password());
-        var example = Example.of(new User(credentials.username(), hashedPassword), ExampleMatcher.matchingAll());
-        var userContainer = userRepository.findOne(example);
+        var userContainer = getUser(credentials);
         if (userContainer.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         var user = userContainer.get();
         return ResponseEntity.ok(new UserResponseDTO(user.getUsername()));
-    }
-
-    /**
-     * Retrieve all users from the database
-     *
-     * @return 404 (not found) http response if no users was found,
-     *         200 (ok) http response with all users otherwise
-     */
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        var usersContainer = userRepository.findAll();
-        if(usersContainer.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        var users = usersContainer.stream()
-                .map(user -> new UserResponseDTO(user.getUsername()))
-                .toList();
-        return ResponseEntity.ok(users);
     }
 }

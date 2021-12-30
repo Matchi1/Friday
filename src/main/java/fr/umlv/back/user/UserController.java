@@ -73,15 +73,4 @@ public class UserController {
 		Objects.requireNonNull(credentials);
 		return userService.correctCredentials(credentials);
 	}
-
-	/**
-	 * Retrieve all users from the database
-	 *
-	 * @return 404 (not found) http response if no users was found,
-	 *   	   200 (ok) http response with all users otherwise
-	 */
-    @GetMapping("/user/all")
-    public ResponseEntity<List<UserResponseDTO>> getAll() {
-        return userService.getAllUsers();
-    }
 }
