@@ -3,7 +3,7 @@ package fr.umlv.back.crypt;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class CryptTest {
+public class CryptPasswordTest {
     @Test
     public void shouldHaveSameCryptValue() {
         var encryptor = new CryptPassword();

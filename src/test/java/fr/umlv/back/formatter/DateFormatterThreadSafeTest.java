@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateFormatterTest {
+public class DateFormatterThreadSafeTest {
     /**
      * Create Date according to the specified date details
      *

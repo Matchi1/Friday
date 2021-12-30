@@ -1,9 +1,7 @@
-package java.fr.umlv.back.user;
+package fr.umlv.back.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.umlv.back.user.UserController;
-import fr.umlv.back.user.UserSaveDTO;
-import fr.umlv.back.user.UserService;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(UserController.class)
-public class UserWebTest {
+public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 

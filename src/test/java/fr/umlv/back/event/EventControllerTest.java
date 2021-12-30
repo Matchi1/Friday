@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @WebMvcTest(EventController.class)
-public class EventWebTest {
+public class EventControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -38,7 +38,7 @@ public class EventWebTest {
 		Mockito.when(eventService.addEvent(eventSave))
 				.thenReturn(new ResponseEntity<>(response, HttpStatus.CREATED));
         var mockRequest = MockMvcRequestBuilders
-                .post("/event/add")
+                .post("/event/save")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(eventSave));
         mockMvc.perform(mockRequest)
