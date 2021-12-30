@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import javax.persistence.EntityNotFoundException;
 import java.net.URI;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * This class provides services for event table access such as adding a new
@@ -158,23 +155,40 @@ public class EventService {
 	 * @return 200 (ok) http response containing all the events of the day
 	 * 		   404 (not found) http response otherwise
 	 */
-	public ResponseEntity<List<EventResponseDTO>> getEventOfTheDay() {
+	public ResponseEntity<List<EventResponseDTO>> getEventOfTheDay(String username) {
 		var calendar = Calendar.getInstance();
 		var events = eventRepository.findAll();
 		var diff = calendar.getActualMaximum(Calendar.HOUR_OF_DAY) - calendar.get(Calendar.HOUR_OF_DAY);
 		var current = calendar.getTime();
 		calendar.add(Calendar.HOUR, diff);
 		var limit = calendar.getTime();
-		var eventsOfTheDay = events.stream().filter(event -> {
-			System.out.println(current);
-			System.out.println(limit);
-			System.out.println(event.getDateStart());
-			return (event.getDateStart().after(current) && event.getDateStart().before(limit));
-		}).map(EventResponseDTO::new).toList();
+		var eventsOfTheDay = events.stream().filter(event ->
+				(event.getDateStart().after(current) && event.getDateStart().before(limit)) && event.user().equals(username))
+				.map(EventResponseDTO::new)
+				.toList();
 		if (eventsOfTheDay.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok(eventsOfTheDay);
+	}
+
+	/**
+	 * Find the closest event to the specified date time
+	 *
+	 * @param current the specified date time
+	 * @param event1 first event
+	 * @param event2 second event
+	 * @return 1 if the first event is the closest to the specified date time
+	 * 		   -1 if the second event is the closest to the specified date time
+	 * 		   0 otherwise
+	 */
+	private int compareRecent(Date current, Event event1, Event event2) {
+		if (current.compareTo(event1.getDateStart()) < current.compareTo(event2.getDateStart())) {
+			return 1;
+		} else if (current.compareTo(event1.getDateStart()) == current.compareTo(event2.getDateStart())) {
+			return 0;
+		}
+		return -1;
 	}
 
 	/**
@@ -183,17 +197,12 @@ public class EventService {
 	 * @return 200 (ok) http response containing the most recent event
 	 * 		   404 (not found) http response otherwise
 	 */
-	public ResponseEntity<EventResponseDTO> getMostRecentEvent() {
+	public ResponseEntity<EventResponseDTO> getMostRecentEvent(String username) {
 		var current = Calendar.getInstance().getTime();
 		var events = eventRepository.findAll();
-		var recent = events.stream().min((event1, event2) -> {
-			if (current.compareTo(event1.getDateStart()) < current.compareTo(event2.getDateStart())) {
-				return 1;
-			} else if (current.compareTo(event1.getDateStart()) == current.compareTo(event2.getDateStart())) {
-				return 0;
-			}
-			return -1;
-		});
+		var recent = events.stream()
+				.filter(event -> event.user().equals(username))
+				.min((event1, event2) -> compareRecent(current, event1, event2));
 		if (recent.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}

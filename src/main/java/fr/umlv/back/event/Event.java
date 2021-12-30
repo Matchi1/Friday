@@ -130,7 +130,16 @@ public class Event {
         return info;
     }
 
-	/**
+    /**
+     * Retrieve the associated username to this event
+     *
+     * @return the associated username to this event
+     */
+    public String user() {
+        return user.getUsername();
+    }
+
+	/***
 	 * Set the starting date according to the specified date details
 	 *
 	 * @param dateStartDetails the specified date details

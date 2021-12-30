@@ -113,9 +113,10 @@ public class EventController {
 	 * @return 200 (ok) http response containing all the events of the day
 	 * 		   404 (not found) http response otherwise
 	 */
-	@GetMapping("/event/get/day")
-	public ResponseEntity<List<EventResponseDTO>> getEventOfTheDay() {
-		return eventService.getEventOfTheDay();
+	@GetMapping("/event/get/day/{username}")
+	public ResponseEntity<List<EventResponseDTO>> getEventOfTheDay(@PathVariable String username) {
+		Objects.requireNonNull(username);
+		return eventService.getEventOfTheDay(username);
 	}
 
 	/**
@@ -124,8 +125,9 @@ public class EventController {
 	 * @return 200 (ok) http response containing the most recent event
 	 * 		   404 (not found) http response otherwise
 	 */
-	@GetMapping("/event/get/recent")
-	public ResponseEntity<EventResponseDTO> getMostRecentEvent() {
-		return eventService.getMostRecentEvent();
+	@GetMapping("/event/get/recent/{username}")
+	public ResponseEntity<EventResponseDTO> getMostRecentEvent(@PathVariable String username) {
+		Objects.requireNonNull(username);
+		return eventService.getMostRecentEvent(username);
 	}
 }
