@@ -1,14 +1,21 @@
 package fr.umlv.back.user;
 
 import fr.umlv.back.crypt.CryptPassword;
+import fr.umlv.back.event.Event;
+import fr.umlv.back.event.EventSaveDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+<<<<<<< Updated upstream
+=======
+import java.text.ParseException;
+>>>>>>> Stashed changes
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -19,8 +26,19 @@ import java.util.concurrent.CompletableFuture;
  */
 @Service
 public class UserService {
-    @Autowired
-    private UserRepo userRepository;
+    private final UserRepo userRepository;
+
+    public UserService(UserRepo userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    private boolean userExists(String username) {
+        var exampleMatcher = ExampleMatcher.matchingAll()
+                .withIgnorePaths("password", "events");
+        var example = Example.of(new User(username, ""), exampleMatcher);
+        var user = userRepository.findOne(example);
+        return user.isPresent();
+    }
 
 	/**
 	 * Add a user to the DB using the specified user details
@@ -34,8 +52,10 @@ public class UserService {
     @Async
     public CompletableFuture<ResponseEntity<UserResponseDTO>> addUser(String username, String password) {
 		Objects.requireNonNull(username);
-        var crypt = new CryptPassword();
-        var user = new User(username, crypt.hash(password));
+        if (userExists(username)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        var user = new User(username, new CryptPassword().hash(password));
         var createdUser =  userRepository.save(user);
         return CompletableFuture.completedFuture(ResponseEntity
                 .created(URI.create("/users/save/" + createdUser.getUsername()))
