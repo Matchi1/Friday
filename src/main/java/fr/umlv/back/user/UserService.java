@@ -1,9 +1,7 @@
 package fr.umlv.back.user;
 
 import fr.umlv.back.crypt.CryptPassword;
-import fr.umlv.back.event.Event;
 import fr.umlv.back.event.EventSaveDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
@@ -12,10 +10,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
-<<<<<<< Updated upstream
-=======
-import java.text.ParseException;
->>>>>>> Stashed changes
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -53,7 +47,7 @@ public class UserService {
     public CompletableFuture<ResponseEntity<UserResponseDTO>> addUser(String username, String password) {
 		Objects.requireNonNull(username);
         if (userExists(username)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.CONFLICT).build());
         }
         var user = new User(username, new CryptPassword().hash(password));
         var createdUser =  userRepository.save(user);
@@ -93,13 +87,13 @@ public class UserService {
      *         404 (not found) http response otherwise
 	 */
     @Async
-    public CompletableFuture<ResponseEntity<UserResponseDTO>> updatePassword(String username , String newPassword) {
+    public CompletableFuture<ResponseEntity<UserResponseDTO>> updatePassword(UserSaveDTO details) {
         var crypt = new CryptPassword();
-        var user = userRepository.findById(username);
+        var user = userRepository.findById(details.username());
         if (user.isEmpty()) {
             return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
         }
-        user.get().setPassword(crypt.hash(newPassword));
+        user.get().setPassword(crypt.hash(details.password()));
         var updatedUser = userRepository.save(user.get());
         return CompletableFuture.completedFuture(ResponseEntity
                 .created(URI.create("/user/update/" + updatedUser.getUsername()))

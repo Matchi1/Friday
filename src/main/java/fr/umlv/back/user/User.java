@@ -1,16 +1,12 @@
 package fr.umlv.back.user;
 
-
-import fr.umlv.back.event.Event;
-
 import javax.persistence.*;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * This class is responsible of representing an user and its characteristic
  */
-@Entity(name = "USER_DB")
+@Entity(name = "USERS_DB")
 public class User {
     @Id
 	@Column(nullable = false)
@@ -18,10 +14,6 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private Set<Event> events;
 
 	/**
 	 * Contructs an Event according to the specified username and password

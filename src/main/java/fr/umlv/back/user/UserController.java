@@ -64,6 +64,13 @@ public class UserController {
         return userService.existById(id).get();
     }
 
+	@PutMapping("/user/update")
+	public ResponseEntity<UserResponseDTO> updatePassword(@RequestBody UserSaveDTO details)
+			throws ExecutionException, InterruptedException {
+		Objects.requireNonNull(details);
+		return userService.updatePassword(details).get();
+	}
+
 	/**
 	 * Verify if a user input a correct credentials for the application login
 	 *
