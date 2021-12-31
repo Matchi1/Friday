@@ -1,6 +1,5 @@
 package fr.umlv.back.event;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,11 @@ import java.util.concurrent.CompletableFuture;
  */
 @Service
 public class EventService {
-    @Autowired
     private EventRepo eventRepository;
+
+	public EventService(EventRepo eventRepository) {
+		this.eventRepository = eventRepository;
+	}
 
 	/**
 	 * Verify if an event is present in the database using the specified event
@@ -74,11 +76,11 @@ public class EventService {
 	 */
 	@Async
     public CompletableFuture<ResponseEntity<EventResponseDTO>> updateEvent(UUID id, EventSaveDTO eventSave) {
-        var event = eventRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found for this Id :: " + id));
-        event.setDateStart(eventSave.start());
-        event.setDateEnd(eventSave.start());
-        event.setInfo(eventSave.info());
+		if(!eventRepository.existsById(id)) {
+			return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
+		}
+		var event = eventRepository.findById(id).get();
+		event.eventUpdate(eventSave);
         final var updatedEvent = eventRepository.save(event);
         return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.ACCEPTED)
 				.location(URI.create("/event/get/" + updatedEvent.getId()))

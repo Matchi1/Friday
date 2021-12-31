@@ -130,33 +130,17 @@ public class Event {
         return user.getUsername();
     }
 
-	/***
-	 * Set the starting date according to the specified starting date
-	 *
-	 * @param start the specified starting details
-	 */
-    public void setDateStart(String start) {
+    /**
+     * Update this event according to the specified event details
+     *
+     * @param details the specified event details
+     */
+    public void eventUpdate(EventSaveDTO details) {
         var formatter = new DateFormatter();
-        this.dateStart = formatter.formatFromStringToDate(start);
-    }
-
-	/**
-	 * Set the ending date according to the specified ending date
-	 *
-	 * @param end the specified ending date
-	 */
-    public void setDateEnd(String end) {
-        var formatter = new DateFormatter();
-        this.dateStart = formatter.formatFromStringToDate(end);
-    }
-
-	/**
-	 * Set the description according to the specified description
-	 *
-	 * @param info the specified description
-	 */
-    public void setInfo(String info) {
-        this.info = info;
+        this.title = details.title();
+        this.dateStart = formatter.formatFromStringToDate(details.start());
+        this.dateEnd = formatter.formatFromStringToDate(details.end());
+        this.info = details.info();
     }
 
     @Override
