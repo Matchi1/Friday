@@ -5,12 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * This class provides services for user table access such as adding a new
@@ -30,14 +31,15 @@ public class UserService {
 	 * @throws NullPointerException if one of the specified details is null
 	 * @return 200 (ok) http response with the added user
 	 */
-    public ResponseEntity<UserResponseDTO> addUser(String username, String password) {
+    @Async
+    public CompletableFuture<ResponseEntity<UserResponseDTO>> addUser(String username, String password) {
 		Objects.requireNonNull(username);
         var crypt = new CryptPassword();
         var user = new User(username, crypt.hash(password));
         var createdUser =  userRepository.save(user);
-        return ResponseEntity
+        return CompletableFuture.completedFuture(ResponseEntity
                 .created(URI.create("/users/save/" + createdUser.getUsername()))
-                .body(new UserResponseDTO(createdUser.getUsername()));
+                .body(new UserResponseDTO(createdUser.getUsername())));
     }
 
 	/**
@@ -49,13 +51,14 @@ public class UserService {
 	 * @return 200 (ok) http response if the user was found
 	 * 		   404 (not found) http response otherwise
 	 */
-    public ResponseEntity<UserResponseDTO> removeUser(String username) {
+    @Async
+    public CompletableFuture<ResponseEntity<UserResponseDTO>> removeUser(String username) {
         Objects.requireNonNull(username);
         if (userRepository.findById(username).isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
         }
         userRepository.deleteById(username);
-        return ResponseEntity.ok().build();
+        return CompletableFuture.completedFuture(ResponseEntity.ok().build());
     }
 
 	/**
@@ -69,17 +72,18 @@ public class UserService {
 	 * @return 201 (created) http response if the password of the user has been changed,
      *         404 (not found) http response otherwise
 	 */
-    public ResponseEntity<UserResponseDTO> updatePassword(String username , String newPassword) {
+    @Async
+    public CompletableFuture<ResponseEntity<UserResponseDTO>> updatePassword(String username , String newPassword) {
         var crypt = new CryptPassword();
         var user = userRepository.findById(username);
         if (user.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
         }
         user.get().setPassword(crypt.hash(newPassword));
         var updatedUser = userRepository.save(user.get());
-        return ResponseEntity
+        return CompletableFuture.completedFuture(ResponseEntity
                 .created(URI.create("/user/update/" + updatedUser.getUsername()))
-                .body(new UserResponseDTO(updatedUser.getUsername()));
+                .body(new UserResponseDTO(updatedUser.getUsername())));
     }
 
     /**
@@ -90,12 +94,13 @@ public class UserService {
      * @return 200 (ok) http response containing the retrieved user,
      * 		   404 (not found) http response otherwise
      */
-    public ResponseEntity<UserResponseDTO> existById(String username) {
+    @Async
+    public CompletableFuture<ResponseEntity<UserResponseDTO>> existById(String username) {
         Objects.requireNonNull(username);
         if (userRepository.existsById(username)) {
-            return ResponseEntity.ok().build();
+            return CompletableFuture.completedFuture(ResponseEntity.ok().build());
         }
-        return ResponseEntity.notFound().build();
+        return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
     }
 
     /**
@@ -121,12 +126,13 @@ public class UserService {
      * @return 200 (ok) http response containing a user info if the credentials are correct,
      * 		   404 (not found) http response otherwise
      */
-    public ResponseEntity<UserResponseDTO> correctCredentials(UserSaveDTO credentials) {
+    @Async
+    public CompletableFuture<ResponseEntity<UserResponseDTO>> correctCredentials(UserSaveDTO credentials) {
         var userContainer = getUser(credentials);
         if (userContainer.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
         }
         var user = userContainer.get();
-        return ResponseEntity.ok(new UserResponseDTO(user.getUsername()));
+        return CompletableFuture.completedFuture(ResponseEntity.ok(new UserResponseDTO(user.getUsername())));
     }
 }

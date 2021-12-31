@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This class provide basic features for communication between the database and
@@ -25,9 +25,10 @@ public class UserController {
 	 * @return 200 (ok) http response with the added user
 	 */
     @PostMapping("/user/save")
-    public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserSaveDTO user) {
+    public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserSaveDTO user)
+			throws ExecutionException, InterruptedException {
         Objects.requireNonNull(user);
-        return userService.addUser(user.username(), user.password());
+        return userService.addUser(user.username(), user.password()).get();
     }
 
 	/**
@@ -40,8 +41,9 @@ public class UserController {
 	 * 	 	   404 (not found) http response otherwise
 	 */
     @DeleteMapping("/user/delete/{id}")
-    public ResponseEntity<UserResponseDTO> removeUser(@PathVariable String id) {
-        return userService.removeUser(id);
+    public ResponseEntity<UserResponseDTO> removeUser(@PathVariable String id)
+			throws ExecutionException, InterruptedException {
+        return userService.removeUser(id).get();
     }
 
 	/**
@@ -54,9 +56,10 @@ public class UserController {
 	 *         404 (not found) http response otherwise
 	 */
     @GetMapping("/user/exist/{id}")
-    public ResponseEntity<UserResponseDTO> existId(@PathVariable String id) {
+    public ResponseEntity<UserResponseDTO> existId(@PathVariable String id)
+			throws ExecutionException, InterruptedException {
 		Objects.requireNonNull(id);
-        return userService.existById(id);
+        return userService.existById(id).get();
     }
 
 	/**
@@ -69,8 +72,9 @@ public class UserController {
 	 * 		   404 (not found) http response otherwise
 	 */
 	@PostMapping("/user/exist")
-	public ResponseEntity<UserResponseDTO> correctCredentials(@RequestBody UserSaveDTO credentials) {
+	public ResponseEntity<UserResponseDTO> correctCredentials(@RequestBody UserSaveDTO credentials)
+			throws ExecutionException, InterruptedException {
 		Objects.requireNonNull(credentials);
-		return userService.correctCredentials(credentials);
+		return userService.correctCredentials(credentials).get();
 	}
 }
