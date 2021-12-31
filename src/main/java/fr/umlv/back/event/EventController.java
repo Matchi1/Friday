@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This class provide basic features for communication between the database and
@@ -28,9 +29,10 @@ public class EventController {
 	 * 		   201 (created) http response otherwise
 	 */
     @PostMapping("/event/save")
-    public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) throws ParseException {
+    public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event)
+			throws ExecutionException, InterruptedException {
         Objects.requireNonNull(event);
-        return eventService.addEvent(event);
+        return eventService.addEvent(event).get();
     }
 
 	/**
@@ -40,8 +42,9 @@ public class EventController {
 	 * 		   404 (not found) http response otherwise
 	 */
     @GetMapping("/event/all")
-    public ResponseEntity<List<EventResponseDTO>> getEvents() {
-        return eventService.getEvents();
+    public ResponseEntity<List<EventResponseDTO>> getEvents()
+			throws ExecutionException, InterruptedException {
+        return eventService.getEvents().get();
     }
 
 	/**
@@ -54,9 +57,10 @@ public class EventController {
 	 * 		   404 (not found) http response otherwise
 	 */
     @DeleteMapping("/event/delete/{id}")
-    public ResponseEntity<EventResponseDTO> removeEventById(@PathVariable UUID id) {
+    public ResponseEntity<EventResponseDTO> removeEventById(@PathVariable UUID id)
+			throws ExecutionException, InterruptedException {
         Objects.requireNonNull(id);
-        return eventService.removeEventById(id);
+        return eventService.removeEventById(id).get();
     }
 
 	/**
@@ -72,10 +76,10 @@ public class EventController {
     @PutMapping("/event/update/{id}")
     public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable UUID id,
-            @RequestBody EventSaveDTO event) throws ParseException {
+            @RequestBody EventSaveDTO event) throws ExecutionException, InterruptedException {
         Objects.requireNonNull(event);
         Objects.requireNonNull(id);
-        return eventService.updateEvent(id, event);
+        return eventService.updateEvent(id, event).get();
     }
 
 	/**
@@ -88,9 +92,10 @@ public class EventController {
 	 * 		   404 (not found) http response otherwise
 	 */
     @GetMapping("/event/get/{id}")
-    public ResponseEntity<EventResponseDTO> getEvent(@PathVariable UUID id) {
+    public ResponseEntity<EventResponseDTO> getEvent(@PathVariable UUID id)
+			throws ExecutionException, InterruptedException {
         Objects.requireNonNull(id);
-        return eventService.getEventById(id);
+        return eventService.getEventById(id).get();
     }
 
 	/**
@@ -100,9 +105,10 @@ public class EventController {
 	 * 		   404 (not found) http response otherwise
 	 */
 	@GetMapping("/event/get/day/{username}")
-	public ResponseEntity<List<EventResponseDTO>> getEventOfTheDay(@PathVariable String username) {
+	public ResponseEntity<List<EventResponseDTO>> getEventOfTheDay(@PathVariable String username)
+			throws ExecutionException, InterruptedException {
 		Objects.requireNonNull(username);
-		return eventService.getEventOfTheDay(username);
+		return eventService.getEventOfTheDay(username).get();
 	}
 
 	/**
@@ -112,8 +118,9 @@ public class EventController {
 	 * 		   404 (not found) http response otherwise
 	 */
 	@GetMapping("/event/get/recent/{username}")
-	public ResponseEntity<EventResponseDTO> getMostRecentEvent(@PathVariable String username) {
+	public ResponseEntity<EventResponseDTO> getMostRecentEvent(@PathVariable String username)
+			throws ExecutionException, InterruptedException {
 		Objects.requireNonNull(username);
-		return eventService.getMostRecentEvent(username);
+		return eventService.getMostRecentEvent(username).get();
 	}
 }

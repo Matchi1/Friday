@@ -68,7 +68,7 @@ public class Event {
 	 *
 	 * @throws NullPointerException if the specified event details is null
 	 */
-    public static Event createEvent(EventSaveDTO eventDetails) throws ParseException {
+    public static Event createEvent(EventSaveDTO eventDetails) {
         Objects.requireNonNull(eventDetails);
         var formatter = new DateFormatter();
         var start = formatter.formatFromStringToDate(eventDetails.start());
@@ -135,7 +135,7 @@ public class Event {
 	 *
 	 * @param start the specified starting details
 	 */
-    public void setDateStart(String start) throws ParseException {
+    public void setDateStart(String start) {
         var formatter = new DateFormatter();
         this.dateStart = formatter.formatFromStringToDate(start);
     }
@@ -145,7 +145,7 @@ public class Event {
 	 *
 	 * @param end the specified ending date
 	 */
-    public void setDateEnd(String end) throws ParseException {
+    public void setDateEnd(String end) {
         var formatter = new DateFormatter();
         this.dateStart = formatter.formatFromStringToDate(end);
     }

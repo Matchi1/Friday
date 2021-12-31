@@ -4,14 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import javax.persistence.EntityNotFoundException;
 import java.net.URI;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * This class provides services for event table access such as adding a new
@@ -31,7 +32,7 @@ public class EventService {
 	 * @return true if an event is respecting the details
 	 * 		   else false
 	 */
-    private boolean containsEvent(EventSaveDTO eventDetails) throws ParseException {
+    private boolean containsEvent(EventSaveDTO eventDetails) {
         var exampleMatcher = ExampleMatcher.matchingAll()
 				.withIgnorePaths("id", "title", "info", "user");
         var example = Example.of(Event.createEvent(eventDetails), exampleMatcher);
@@ -48,16 +49,16 @@ public class EventService {
 	 * @return 409 (conflict) http response if there is the same event in the db
 	 * 		   201 (created) http response otherwise
 	 */
-    public ResponseEntity<EventResponseDTO> addEvent(EventSaveDTO eventDetails) throws ParseException {
+	@Async
+	public CompletableFuture<ResponseEntity<EventResponseDTO>> addEvent(EventSaveDTO eventDetails) {
         Objects.requireNonNull(eventDetails);
         if(containsEvent(eventDetails)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.CONFLICT).build());
         }
-        var event = Event.createEvent(eventDetails);
-        final var addedEvent = eventRepository.save(event);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .location(URI.create("/event/get/" + addedEvent.getId()))
-                .body(new EventResponseDTO(event));
+        var addedEvent = eventRepository.save(Event.createEvent(eventDetails));
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.CREATED)
+				.location(URI.create("/event/get/" + addedEvent.getId()))
+				.body(new EventResponseDTO(addedEvent)));
     }
 
 	/**
@@ -71,16 +72,17 @@ public class EventService {
 	 * @throws EntityNotFoundException if the event with the specified id was not found 
 	 * @return 202 http response if the event was updated
 	 */
-    public ResponseEntity<EventResponseDTO> updateEvent(UUID id, EventSaveDTO eventSave) throws ParseException {
+	@Async
+    public CompletableFuture<ResponseEntity<EventResponseDTO>> updateEvent(UUID id, EventSaveDTO eventSave) {
         var event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found for this Id :: " + id));
         event.setDateStart(eventSave.start());
         event.setDateEnd(eventSave.start());
         event.setInfo(eventSave.info());
         final var updatedEvent = eventRepository.save(event);
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .location(URI.create("/event/get/" + updatedEvent.getId()))
-                .body(new EventResponseDTO(updatedEvent));
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.ACCEPTED)
+				.location(URI.create("/event/get/" + updatedEvent.getId()))
+				.body(new EventResponseDTO(updatedEvent)));
     }
 
 	/**
@@ -92,13 +94,14 @@ public class EventService {
 	 * @return 200 (ok) http response if the event was found
 	 * 		   404 (not found) http response otherwise
 	 */
-    public ResponseEntity<EventResponseDTO> removeEventById(UUID id) {
+	@Async
+    public CompletableFuture<ResponseEntity<EventResponseDTO>> removeEventById(UUID id) {
         var event = eventRepository.findById(id);
         if (event.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
         }
         eventRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return CompletableFuture.completedFuture(ResponseEntity.ok().build());
     }
 
 	/**
@@ -107,15 +110,16 @@ public class EventService {
 	 * @return 200 (ok) http response containing a list of all the events,
 	 * 		   404 (not found) http response otherwise
 	 */
-    public ResponseEntity<List<EventResponseDTO>> getEvents() {
+	@Async
+    public CompletableFuture<ResponseEntity<List<EventResponseDTO>>> getEvents() {
         var events = eventRepository.findAll();
 		if(events.isEmpty()) {
-			return ResponseEntity.notFound().build();
+			return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
 		}
         var response = events.stream()
                 .map(EventResponseDTO::new)
                 .toList();
-        return ResponseEntity.ok(response);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(response));
     }
 
 	/**
@@ -126,12 +130,13 @@ public class EventService {
 	 * @return 200 (ok) http response containing the retrieved event
 	 * 		   404 (not found) http response otherwise
 	 */
-    public ResponseEntity<EventResponseDTO> getEventById(UUID id) {
+	@Async
+    public CompletableFuture<ResponseEntity<EventResponseDTO>> getEventById(UUID id) {
         var event = eventRepository.findById(id);
         if(event.isPresent()) {
-            return ResponseEntity.ok(new EventResponseDTO(event.get()));
+            return CompletableFuture.completedFuture(ResponseEntity.ok(new EventResponseDTO(event.get())));
         }
-        return ResponseEntity.notFound().build();
+        return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
     }
 
 	/**
@@ -140,7 +145,8 @@ public class EventService {
 	 * @return 200 (ok) http response containing all the events of the day
 	 * 		   404 (not found) http response otherwise
 	 */
-	public ResponseEntity<List<EventResponseDTO>> getEventOfTheDay(String username) {
+	@Async
+	public CompletableFuture<ResponseEntity<List<EventResponseDTO>>> getEventOfTheDay(String username) {
 		var events = eventRepository.findAll();
 		var current = LocalDate.now();
 		var end = current.atTime(LocalTime.MAX);
@@ -149,9 +155,9 @@ public class EventService {
 				.map(EventResponseDTO::new)
 				.toList();
 		if (eventsOfTheDay.isEmpty()) {
-			return ResponseEntity.notFound().build();
+			return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
 		}
-		return ResponseEntity.ok(eventsOfTheDay);
+		return CompletableFuture.completedFuture(ResponseEntity.ok(eventsOfTheDay));
 	}
 
 	/**
@@ -179,15 +185,16 @@ public class EventService {
 	 * @return 200 (ok) http response containing the most recent event
 	 * 		   404 (not found) http response otherwise
 	 */
-	public ResponseEntity<EventResponseDTO> getMostRecentEvent(String username) {
+	@Async
+	public CompletableFuture<ResponseEntity<EventResponseDTO>> getMostRecentEvent(String username) {
 		var current = LocalDate.now();
 		var events = eventRepository.findAll();
 		var recent = events.stream()
 				.filter(event -> event.user().equals(username))
 				.min((event1, event2) -> compareRecent(current, event1, event2));
 		if (recent.isEmpty()) {
-			return ResponseEntity.notFound().build();
+			return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
 		}
-		return ResponseEntity.ok(new EventResponseDTO(recent.get()));
+		return CompletableFuture.completedFuture(ResponseEntity.ok(new EventResponseDTO(recent.get())));
 	}
 }
