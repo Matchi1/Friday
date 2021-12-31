@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.concurrent.CompletableFuture;
+
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
     @Autowired
@@ -35,7 +37,7 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDetails));;
         Mockito.when(userService.addUser(username, password))
-                .thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
+                .thenReturn(CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.CREATED)));
         mockMvc.perform(mockRequest)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 	}

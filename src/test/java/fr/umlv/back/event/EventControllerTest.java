@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @WebMvcTest(EventController.class)
 public class EventControllerTest {
@@ -36,7 +37,7 @@ public class EventControllerTest {
 		var local = LocalDate.now();
 		var response = new EventResponseDTO(UUID.randomUUID(), "", local, local, "");
 		Mockito.when(eventService.addEvent(eventSave))
-				.thenReturn(new ResponseEntity<>(response, HttpStatus.CREATED));
+				.thenReturn(CompletableFuture.completedFuture(new ResponseEntity<>(response, HttpStatus.CREATED)));
         var mockRequest = MockMvcRequestBuilders
                 .post("/event/save")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -50,7 +51,7 @@ public class EventControllerTest {
         var mockRequest = MockMvcRequestBuilders
                 .get("/event/all");
 		Mockito.when(eventService.getEvents())
-				.thenReturn(new ResponseEntity<>(HttpStatus.OK));
+				.thenReturn(CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.OK)));
         mockMvc.perform(mockRequest)
                 .andExpect(MockMvcResultMatchers.status().isOk());
 	}
@@ -76,7 +77,7 @@ public class EventControllerTest {
 		var start = "2021/11/10 23:14";
 		var eventSave = new EventSaveDTO("", start,"add event test");
 		Mockito.when(eventService.updateEvent(id, eventSave))
-				.thenReturn(ResponseEntity.accepted().build());
+				.thenReturn(CompletableFuture.completedFuture(ResponseEntity.accepted().build()));
 		var mockRequest = MockMvcRequestBuilders
 				.put("/event/update/" + id)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -98,7 +99,7 @@ public class EventControllerTest {
 	}
 
 	@Test
-	void shouldRespondIsOkWhenRemoveEvent() throws Exception {
+	void shouldRespondIsOkWhenRemoveEvent()  {
 	}
 
 	@Test
