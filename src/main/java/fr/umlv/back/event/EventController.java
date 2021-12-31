@@ -42,10 +42,10 @@ public class EventController {
 	 * @return 200 (ok) http response containing a list of all the events,
 	 * 		   404 (not found) http response otherwise
 	 */
-    @GetMapping("/event/all")
-    public ResponseEntity<List<EventResponseDTO>> getEvents()
+    @GetMapping("/event/all/{username}")
+    public ResponseEntity<List<EventResponseDTO>> getEvents(@PathVariable String username)
 			throws ExecutionException, InterruptedException {
-        return eventService.getEvents().get();
+        return eventService.getAllEvents(username).get();
     }
 
 	/**

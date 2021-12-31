@@ -2,15 +2,13 @@ package fr.umlv.back.event;
 
 import fr.umlv.back.formatter.DateFormatter;
 import fr.umlv.back.formatter.EventFormatter;
-import fr.umlv.back.user.User;
 
 import javax.persistence.*;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.*;
 
 /**
- * This class is responsible of representing an event and its characteristic
+ * This class is responsible for representing an event and its characteristic
  */
 @Entity(name = "EVENT_DB")
 public class Event {
@@ -31,12 +29,8 @@ public class Event {
     @Column(nullable = false)
     private String info;
 
-	/**
-	 * Pointor to the corresponding user in the database
-	 */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private User user;
+    @Column(nullable = false)
+    private String username;
 
 	/**
 	 * Constructs an empty event
@@ -54,11 +48,12 @@ public class Event {
 	 *
 	 * @throws NullPointerException if one of the specified argument is null
 	 */
-    private Event(String title, LocalDate dateStart, LocalDate dateEnd, String info) {
+    private Event(String title, LocalDate dateStart, LocalDate dateEnd, String username, String info) {
         this.title = Objects.requireNonNull(title);
         this.dateStart = Objects.requireNonNull(dateStart);
         this.dateEnd = Objects.requireNonNull(dateEnd);
         this.info = Objects.requireNonNull(info);
+        this.username = username;
     }
 
 	/**
@@ -73,7 +68,7 @@ public class Event {
         var formatter = new DateFormatter();
         var start = formatter.formatFromStringToDate(eventDetails.start());
         var end = formatter.formatFromStringToDate(eventDetails.end());
-        return new Event(eventDetails.title(), start, end, eventDetails.info());
+        return new Event(eventDetails.title(), start, end, eventDetails.user(), eventDetails.info());
     }
 
 	/**
@@ -127,7 +122,7 @@ public class Event {
      * @return the associated username to this event
      */
     public String user() {
-        return user.getUsername();
+        return username;
     }
 
     /**
@@ -141,6 +136,7 @@ public class Event {
         this.dateStart = formatter.formatFromStringToDate(details.start());
         this.dateEnd = formatter.formatFromStringToDate(details.end());
         this.info = details.info();
+        this.username = details.user();
     }
 
     @Override
@@ -152,12 +148,12 @@ public class Event {
             return false;
         }
         var event = (Event) o;
-        return dateStart.equals(event.dateStart) && dateEnd.equals(event.dateEnd) && user.equals(event.user);
+        return dateStart.equals(event.dateStart) && dateEnd.equals(event.dateEnd) && username.equals(event.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dateStart, dateEnd, user);
+        return Objects.hash(dateStart, dateEnd, username);
     }
 
     @Override
