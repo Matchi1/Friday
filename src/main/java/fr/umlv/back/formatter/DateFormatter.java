@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class DateFormatter {
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy, HH:mm:ss");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy, HH:mm:ss 'GMT+'");
 
     public LocalDate formatFromStringToDate(String date) {
         Objects.requireNonNull(date);
