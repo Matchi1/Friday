@@ -9,6 +9,9 @@ public class DateFormatter {
 
     public LocalDate formatFromStringToDate(String date) {
         Objects.requireNonNull(date);
+        if(date.isEmpty()) {
+            return LocalDate.now();
+        }
         return LocalDate.parse(date, formatter);
     }
 
