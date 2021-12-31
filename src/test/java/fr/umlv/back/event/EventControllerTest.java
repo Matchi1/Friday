@@ -39,7 +39,7 @@ public class EventControllerTest {
 
     @Test
     void shouldRespond409WhenAddSameDate() throws Exception {
-		var details = new EventSaveDTO("test", "11/10/2021, 23:14:00 GMT+1", "11/10/2022, 23:14:00 GMT+1", "hello world");
+		var details = new EventSaveDTO("test", "11/10/2021, 23:14:00 GMT+1", "11/10/2022, 23:14:00 GMT+1","ok", "hello world");
         var mockRequest = MockMvcRequestBuilders
                 .post("/event/save")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -49,9 +49,8 @@ public class EventControllerTest {
     }
 
 	@Test
-
 	void shouldThrowOkWhenUpdateEvent() throws Exception {
-		var eventSave = new EventSaveDTO("changed titled", "01/28/2021, 23:14:00 GMT+1", "add event test");
+		var eventSave = new EventSaveDTO("changed titled", "01/28/2021, 23:14:00 GMT+1", "ok", "add event test");
 		var mockRequest = MockMvcRequestBuilders
 				.put("/event/update/" + currentId)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -61,9 +60,8 @@ public class EventControllerTest {
 	}
 
 	@Test
-
 	void shouldThrowNotFoundExceptionWhenEventIdNotExist() throws Exception {
-		var eventSave = new EventSaveDTO("changed titled", "01/28/2021, 23:14:00 GMT+1", "add event test");
+		var eventSave = new EventSaveDTO("changed titled", "01/28/2021, 23:14:00 GMT+1", "user", "add event test");
 		var mockRequest = MockMvcRequestBuilders
 				.put("/event/update/" + UUID.randomUUID())
 				.contentType(MediaType.APPLICATION_JSON)
