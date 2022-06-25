@@ -1,15 +1,11 @@
 package fr.umlv.back.user;
 
 import fr.umlv.back.crypt.CryptPassword;
-import fr.umlv.back.event.EventSaveDTO;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -44,16 +40,17 @@ public class UserService {
 	 * @return 200 (ok) http response with the added user
 	 */
     @Async
-    public CompletableFuture<ResponseEntity<UserResponseDTO>> addUser(String username, String password) {
+    public CompletableFuture<Optional<UserResponseDTO>> addUser(String username, String password) {
 		Objects.requireNonNull(username);
+		Objects.requireNonNull(password);
         if (userExists(username)) {
-            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.CONFLICT).build());
+            return CompletableFuture.completedFuture(Optional.empty());
         }
-        var user = new User(username, new CryptPassword().hash(password));
+        var encryptedPassword = new CryptPassword().hash(password);
+        var user = new User(username, encryptedPassword);
         var createdUser =  userRepository.save(user);
-        return CompletableFuture.completedFuture(ResponseEntity
-                .created(URI.create("/users/save/" + createdUser.getUsername()))
-                .body(new UserResponseDTO(createdUser.getUsername())));
+        var response = new UserResponseDTO(createdUser.getUsername());
+        return CompletableFuture.completedFuture(Optional.of(response));
     }
 
 	/**
@@ -66,20 +63,17 @@ public class UserService {
 	 * 		   404 (not found) http response otherwise
 	 */
     @Async
-    public CompletableFuture<ResponseEntity<UserResponseDTO>> removeUser(String username) {
+    public CompletableFuture<Boolean> removeUser(String username) {
         Objects.requireNonNull(username);
         if (userRepository.findById(username).isEmpty()) {
-            return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
+            return CompletableFuture.completedFuture(Boolean.TRUE);
         }
         userRepository.deleteById(username);
-        return CompletableFuture.completedFuture(ResponseEntity.ok().build());
+        return CompletableFuture.completedFuture(Boolean.FALSE);
     }
 
 	/**
 	 * Update the password of a user with the specified username
-	 *
-	 * @param username the specified username
-	 * @param newPassword the new password
 	 *
 	 * @throws NullPointerException if the specified details is null
 	 *
@@ -87,17 +81,16 @@ public class UserService {
      *         404 (not found) http response otherwise
 	 */
     @Async
-    public CompletableFuture<ResponseEntity<UserResponseDTO>> updatePassword(UserSaveDTO details) {
+    public CompletableFuture<Optional<UserResponseDTO>> updatePassword(UserSaveDTO details) {
         var crypt = new CryptPassword();
         var user = userRepository.findById(details.username());
         if (user.isEmpty()) {
-            return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
+            return CompletableFuture.completedFuture(Optional.empty());
         }
         user.get().setPassword(crypt.hash(details.password()));
         var updatedUser = userRepository.save(user.get());
-        return CompletableFuture.completedFuture(ResponseEntity
-                .created(URI.create("/user/update/" + updatedUser.getUsername()))
-                .body(new UserResponseDTO(updatedUser.getUsername())));
+        var response = new UserResponseDTO(updatedUser.getUsername());
+        return CompletableFuture.completedFuture(Optional.of(response));
     }
 
     /**
@@ -109,12 +102,12 @@ public class UserService {
      * 		   404 (not found) http response otherwise
      */
     @Async
-    public CompletableFuture<ResponseEntity<UserResponseDTO>> existById(String username) {
+    public CompletableFuture<Boolean> existById(String username) {
         Objects.requireNonNull(username);
         if (userRepository.existsById(username)) {
-            return CompletableFuture.completedFuture(ResponseEntity.ok().build());
+            return CompletableFuture.completedFuture(Boolean.TRUE);
         }
-        return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
+        return CompletableFuture.completedFuture(Boolean.FALSE);
     }
 
     /**
@@ -141,12 +134,13 @@ public class UserService {
      * 		   404 (not found) http response otherwise
      */
     @Async
-    public CompletableFuture<ResponseEntity<UserResponseDTO>> correctCredentials(UserSaveDTO credentials) {
+    public CompletableFuture<Optional<UserResponseDTO>> correctCredentials(UserSaveDTO credentials) {
         var userContainer = getUser(credentials);
         if (userContainer.isEmpty()) {
-            return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
+            return CompletableFuture.completedFuture(Optional.empty());
         }
         var user = userContainer.get();
-        return CompletableFuture.completedFuture(ResponseEntity.ok(new UserResponseDTO(user.getUsername())));
+        var response = new UserResponseDTO(user.getUsername());
+        return CompletableFuture.completedFuture(Optional.of(response));
     }
 }

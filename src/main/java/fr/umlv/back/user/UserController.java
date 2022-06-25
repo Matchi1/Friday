@@ -1,8 +1,10 @@
 package fr.umlv.back.user;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -30,7 +32,13 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserSaveDTO user)
 			throws ExecutionException, InterruptedException {
         Objects.requireNonNull(user);
-        return userService.addUser(user.username(), user.password()).get();
+		var data = userService.addUser(user.username(), user.password()).get();
+		if(data.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		var userResponse = data.get();
+		var uri = URI.create("/users/save/" + userResponse.username());
+		return ResponseEntity.created(uri).body(userResponse);
     }
 
 	/**
@@ -45,7 +53,11 @@ public class UserController {
     @DeleteMapping("/user/delete/{id}")
     public ResponseEntity<UserResponseDTO> removeUser(@PathVariable String id)
 			throws ExecutionException, InterruptedException {
-        return userService.removeUser(id).get();
+		var result = userService.removeUser(id);
+		if(result.get()) {
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.notFound().build();
     }
 
 	/**
@@ -61,14 +73,24 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> existId(@PathVariable String id)
 			throws ExecutionException, InterruptedException {
 		Objects.requireNonNull(id);
-        return userService.existById(id).get();
+		var data = userService.existById(id).get();
+		if(data) {
+			return ResponseEntity.ok().build();
+		}
+        return ResponseEntity.notFound().build();
     }
 
 	@PutMapping("/user/update")
 	public ResponseEntity<UserResponseDTO> updatePassword(@RequestBody UserSaveDTO details)
 			throws ExecutionException, InterruptedException {
 		Objects.requireNonNull(details);
-		return userService.updatePassword(details).get();
+		var data = userService.updatePassword(details).get();
+		if(data.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+		var user = data.get();
+		var uri = URI.create("/user/update/" + user.username());
+		return ResponseEntity.created(uri).body(user);
 	}
 
 	/**
@@ -84,6 +106,11 @@ public class UserController {
 	public ResponseEntity<UserResponseDTO> correctCredentials(@RequestBody UserSaveDTO credentials)
 			throws ExecutionException, InterruptedException {
 		Objects.requireNonNull(credentials);
-		return userService.correctCredentials(credentials).get();
+		var data = userService.correctCredentials(credentials).get();
+		if(data.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+		var user = data.get();
+		return ResponseEntity.ok(user);
 	}
 }
