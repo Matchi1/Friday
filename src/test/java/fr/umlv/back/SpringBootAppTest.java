@@ -9,6 +9,5 @@ public class SpringBootAppTest {
      * Sanity check
      */
     @Test
-    public void contextLoads() {
-    }
+    public void contextLoads() {}
 }

@@ -32,7 +32,7 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserSaveDTO user)
 			throws ExecutionException, InterruptedException {
         Objects.requireNonNull(user);
-		var data = userService.addUser(user.username(), user.password()).get();
+		var data = userService.addUser(user).get();
 		if(data.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}

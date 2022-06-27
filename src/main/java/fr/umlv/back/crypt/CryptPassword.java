@@ -17,6 +17,8 @@ public class CryptPassword {
 
     private final byte[] salt;
     private final MessageDigest md;
+    private final String encryptionKey = "CeSTfUNLeJAVAHa5";
+    private final String encryptionType = "SHA-512";
 
 	/**
 	 * Contructs a encrypter with default encryption key and that uses
@@ -25,10 +27,9 @@ public class CryptPassword {
 	 * @throws NoSuchAlgorithmException if the algorithme was not found
 	 */
     public CryptPassword() {
-        var encryptionKey = "CeSTfUNLeJAVAHa5";
         salt = encryptionKey.getBytes(StandardCharsets.UTF_8);
         try {
-            md = MessageDigest.getInstance("SHA-512");
+            md = MessageDigest.getInstance(encryptionType);
         } catch (NoSuchAlgorithmException e) {
             throw new AssertionError("Algorithm or padding error");
         }
@@ -42,10 +43,10 @@ public class CryptPassword {
 	 * @throws NullPointerException if the specified message is null
 	 * @return the encrypted message
 	 */
-    public String hash(String msg) {
-        Objects.requireNonNull(msg);
+    public String hash(String message) {
+        Objects.requireNonNull(message);
         md.update(salt);
-        var hash = md.digest(msg.getBytes(StandardCharsets.UTF_8));
+        var hash = md.digest(message.getBytes(StandardCharsets.UTF_8));
         return new String(hash);
     }
 }

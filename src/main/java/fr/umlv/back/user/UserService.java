@@ -40,16 +40,12 @@ public class UserService {
 	 * @return 200 (ok) http response with the added user
 	 */
     @Async
-    public CompletableFuture<Optional<UserResponseDTO>> addUser(String username, String password) {
-		Objects.requireNonNull(username);
-		Objects.requireNonNull(password);
-        if (userExists(username)) {
+    public CompletableFuture<Optional<UserResponseDTO>> addUser(UserSaveDTO details) {
+        if(userRepository.existsById(details.username())) {
             return CompletableFuture.completedFuture(Optional.empty());
         }
-        var encryptedPassword = new CryptPassword().hash(password);
-        var user = new User(username, encryptedPassword);
-        var createdUser =  userRepository.save(user);
-        var response = new UserResponseDTO(createdUser.getUsername());
+        var user = userRepository.save(details.toUser());
+        var response = new UserResponseDTO(user.getUsername());
         return CompletableFuture.completedFuture(Optional.of(response));
     }
 
