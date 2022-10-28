@@ -10,13 +10,12 @@ import java.util.concurrent.ExecutionException;
 
 public class UserServiceTest {
 
+    private UserService service;
+    private final CryptPassword encryptor = new CryptPassword();
+
     @Nested
     @DisplayName("Test the addUser method")
     class TestAddUser {
-
-        private UserService service;
-        private final CryptPassword encryptor = new CryptPassword();
-
 
         void setup_item(UserRepo repo, String name, String password, boolean isPresent) {
             var user = new User(name, encryptor.hash(password));
@@ -63,5 +62,79 @@ public class UserServiceTest {
     @DisplayName("Test the updateUser method")
     class TestUpdateUser {
 
+        void setup_item(UserRepo repo, String name, String password, boolean isPresent) {
+            var user = new User(name, encryptor.hash(password));
+            when(repo.save(user)).thenReturn(user);
+            when(repo.existsById(name)).thenReturn(isPresent);
+        }
+
+        @BeforeEach
+        void setup() {
+            var repo = mock(UserRepo.class);
+            setup_item(repo, "john", "1234", false);
+            setup_item(repo, "James", "password", false);
+            setup_item(repo, "William", "qwerty", true);
+            setup_item(repo, "William", "new password", true);
+            service = new UserService(repo);
+        }
+
+        @Test
+        void testUpdatePassword() throws ExecutionException, InterruptedException {
+            var user = new UserSaveDTO("William", "new password");
+            var future = service.updatePassword(user);
+            Assertions.assertTrue(future.isDone());
+            var data = future.get();
+            Assertions.assertTrue(data.isPresent());
+            var got = data.get();
+            Assertions.assertNotNull(got);
+            Assertions.assertEquals(got.username(), user.username());
+        }
+
+        @Test
+        void testNoUpdatePassword() throws ExecutionException, InterruptedException {
+            var user = new UserSaveDTO("john", "new password");
+            var future = service.updatePassword(user);
+            Assertions.assertTrue(future.isDone());
+            var data = future.get();
+            Assertions.assertTrue(data.isEmpty());
+        }
+    }
+
+    @Nested
+    @DisplayName("Test the removeUser method")
+    class TestRemoveUser {
+
+        void setup_item(UserRepo repo, String name, String password, boolean isPresent) {
+            var user = new User(name, encryptor.hash(password));
+            when(repo.save(user)).thenReturn(user);
+            when(repo.existsById(name)).thenReturn(isPresent);
+        }
+
+        @BeforeEach
+        void setup() {
+            var repo = mock(UserRepo.class);
+            setup_item(repo, "john", "1234", false);
+            setup_item(repo, "James", "password", false);
+            setup_item(repo, "William", "qwerty", true);
+            service = new UserService(repo);
+        }
+
+        @Test
+        void testRemoveUser() throws ExecutionException, InterruptedException {
+            var user = "William";
+            var future = service.removeUser(user);
+            Assertions.assertTrue(future.isDone());
+            var removed = future.get();
+            Assertions.assertTrue(removed);
+        }
+
+        @Test
+        void testNoRemoveUser() throws ExecutionException, InterruptedException {
+            var user = "James";
+            var future = service.removeUser(user);
+            Assertions.assertTrue(future.isDone());
+            var removed = future.get();
+            Assertions.assertFalse(removed);
+        }
     }
 }
